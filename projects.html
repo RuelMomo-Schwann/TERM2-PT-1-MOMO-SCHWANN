@@ -1,0 +1,1936 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Project Page - My Portfolio by Ruel C. Momo Jr.</title>
+    <meta name="description" content="Explore school projects, scientific investigatory research on tidal turbines, and Scratch games by Ruel C. Momo Jr. from Grade 8 Schwann.">
+
+    <!-- GOOGLE FONTS: Editorial Display Serif + Modern UI Sans + Monospace for Telemetry -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600;1,700&family=Share+Tech+Mono&family=Fira+Code:wght@400;500;600;700&family=VT323&display=swap" rel="stylesheet">
+
+    <!-- BOXICONS CDN -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+    <style>
+        /* ============================================================
+           CSS RESET & DESIGN TOKENS (WHITE & GOLD LIGHT MODE)
+           ============================================================ */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg-base: #FAF6EE;
+            --bg-card: #ffffff;
+            --card-border: rgba(197, 155, 39, 0.28);
+            --card-hover-border: #c59b27;
+            --card-shadow: 0 10px 30px rgba(184, 134, 11, 0.08);
+            --card-hover-shadow: 0 18px 45px rgba(197, 155, 39, 0.2);
+            --text-heading: #081a30;
+            --text-body: #3e4d5f;
+            --text-muted: #64748b;
+            --accent-gold: #c59b27;
+            --accent-gold-dark: #9e7814;
+            --gold-gradient: linear-gradient(135deg, #dfa728 0%, #c5911e 100%);
+            --navbar-bg: rgba(255, 255, 255, 0.88);
+            --navbar-border: rgba(197, 155, 39, 0.25);
+            --nav-link-color: #0c2340;
+            --nav-pill-bg: #dfa728;
+            --badge-bg: rgba(197, 155, 39, 0.12);
+            --badge-border: rgba(197, 155, 39, 0.35);
+            --badge-text: #8c680d;
+            --btn-primary-bg: linear-gradient(135deg, #dfa728 0%, #c5911e 100%);
+            --btn-primary-text: #0c2340;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 85px;
+        }
+
+        body {
+            min-height: 100vh;
+            background: 
+                radial-gradient(circle at 10% 15%, rgba(246, 233, 203, 0.45) 0%, transparent 45%),
+                radial-gradient(circle at 90% 85%, rgba(250, 243, 224, 0.65) 0%, transparent 50%),
+                var(--bg-base);
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            color: var(--text-body);
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+            transition: background 0.8s cubic-bezier(0.4, 0, 0.2, 1), color 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        a:focus-visible, button:focus-visible {
+            outline: 3px solid var(--accent-gold);
+            outline-offset: 3px;
+        }
+
+        /* Entrance Animations */
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .navbar {
+            animation: slideDown 0.8s ease forwards;
+        }
+
+        .projects-header h1 {
+            animation: slideUp 0.8s ease 0.1s both;
+        }
+
+        .projects-header p {
+            animation: slideUp 0.8s ease 0.25s both;
+        }
+
+        /* ============================================================
+           NIGHT MODE PALETTE: Dark Blue and Black
+           ============================================================ */
+        body.theme-dark,
+        body:has(#theme-toggle:checked) {
+            background: 
+                radial-gradient(circle at 15% 15%, #061938 0%, transparent 50%),
+                radial-gradient(circle at 85% 85%, #031024 0%, transparent 55%),
+                #020712;
+            color: #cbd5e1;
+        }
+
+        body.theme-dark .navbar,
+        body:has(#theme-toggle:checked) .navbar {
+            background: rgba(4, 15, 33, 0.92);
+            border-bottom: 1px solid rgba(56, 139, 253, 0.25);
+            box-shadow: 0 4px 25px rgba(0, 0, 0, 0.6);
+        }
+
+        body.theme-dark .logo a,
+        body:has(#theme-toggle:checked) .logo a {
+            color: #ffffff;
+        }
+
+        body.theme-dark .nav-links a,
+        body:has(#theme-toggle:checked) .nav-links a {
+            color: #9db2ce;
+        }
+
+        body.theme-dark .nav-links a:hover,
+        body.theme-dark .nav-links a.active,
+        body:has(#theme-toggle:checked) .nav-links a:hover,
+        body:has(#theme-toggle:checked) .nav-links a.active {
+            color: #ffffff;
+        }
+
+        body.theme-dark .nav-pill,
+        body:has(#theme-toggle:checked) .nav-pill {
+            background: rgba(31, 111, 235, 0.35);
+            border: 1px solid rgba(56, 139, 253, 0.5);
+            box-shadow: 0 0 15px rgba(31, 111, 235, 0.4);
+        }
+
+        body.theme-dark .projects-header h1,
+        body.theme-dark .modal-box h3,
+        body.theme-dark .sim-header h2,
+        body:has(#theme-toggle:checked) .projects-header h1,
+        body:has(#theme-toggle:checked) .modal-box h3,
+        body:has(#theme-toggle:checked) .sim-header h2 {
+            color: #ffffff;
+            text-shadow: 0 2px 14px rgba(56, 139, 253, 0.25);
+        }
+
+        body.theme-dark .projects-header p,
+        body.theme-dark .project-detail-card p,
+        body.theme-dark .sim-header p,
+        body.theme-dark .project-features li,
+        body:has(#theme-toggle:checked) .projects-header p,
+        body:has(#theme-toggle:checked) .project-detail-card p,
+        body:has(#theme-toggle:checked) .sim-header p,
+        body:has(#theme-toggle:checked) .project-features li {
+            color: #94a3b8;
+        }
+
+        /* Night Mode Cards: Dark-blue surfaces, transition to clearly visible blue on hover */
+        body.theme-dark .project-detail-card,
+        body.theme-dark .modal-box,
+        body.theme-dark .simulator-card,
+        body.theme-dark .dropdown-menu,
+        body:has(#theme-toggle:checked) .project-detail-card,
+        body:has(#theme-toggle:checked) .modal-box,
+        body:has(#theme-toggle:checked) .simulator-card,
+        body:has(#theme-toggle:checked) .dropdown-menu {
+            background: rgba(6, 21, 43, 0.85);
+            border: 1px solid rgba(56, 139, 253, 0.22);
+            box-shadow: 0 14px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        body.theme-dark .project-detail-card:hover,
+        body:has(#theme-toggle:checked) .project-detail-card:hover {
+            background: rgba(14, 46, 92, 0.95) !important;
+            border-color: #388bfd !important;
+            box-shadow: 0 16px 45px rgba(24, 90, 180, 0.45), inset 0 0 20px rgba(56, 139, 253, 0.15) !important;
+        }
+
+        body.theme-dark .project-detail-card h2,
+        body:has(#theme-toggle:checked) .project-detail-card h2 {
+            color: #ffffff;
+        }
+
+        body.theme-dark .project-tag,
+        body:has(#theme-toggle:checked) .project-tag {
+            background: rgba(56, 139, 253, 0.15);
+            color: #79c0ff;
+            border: 1px solid rgba(56, 139, 253, 0.3);
+        }
+
+        body.theme-dark .project-features li,
+        body:has(#theme-toggle:checked) .project-features li {
+            background: rgba(56, 139, 253, 0.08);
+            color: #cbd5e1;
+        }
+
+        body.theme-dark .btn-action,
+        body:has(#theme-toggle:checked) .btn-action {
+            background: linear-gradient(135deg, #1f6feb 0%, #1052b5 100%);
+            color: #ffffff;
+            box-shadow: 0 4px 14px rgba(31, 111, 235, 0.35);
+        }
+
+        body.theme-dark .btn-action:hover,
+        body:has(#theme-toggle:checked) .btn-action:hover {
+            background: linear-gradient(135deg, #388bfd 0%, #1f6feb 100%);
+            box-shadow: 0 6px 18px rgba(56, 139, 253, 0.5);
+            color: #ffffff;
+        }
+
+        body.theme-dark .btn-action-primary,
+        body:has(#theme-toggle:checked) .btn-action-primary {
+            background: linear-gradient(135deg, #1f6feb 0%, #0d419d 100%);
+        }
+
+        body.theme-dark .back-to-top,
+        body:has(#theme-toggle:checked) .back-to-top {
+            background: rgba(6, 21, 43, 0.9);
+            color: #79c0ff;
+            border: 1px solid rgba(56, 139, 253, 0.4);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+        }
+
+        body.theme-dark .stat-card,
+        body:has(#theme-toggle:checked) .stat-card {
+            background: #041021;
+            border: 1px solid rgba(56, 139, 253, 0.25);
+        }
+
+        body.theme-dark .stat-card:hover,
+        body:has(#theme-toggle:checked) .stat-card:hover {
+            background: rgba(14, 46, 92, 0.85);
+            border-color: #388bfd;
+        }
+
+        body.theme-dark .stat-card .label,
+        body:has(#theme-toggle:checked) .stat-card .label {
+            color: #94a3b8;
+        }
+
+        body.theme-dark .stat-card .val,
+        body:has(#theme-toggle:checked) .stat-card .val {
+            color: #58a6ff;
+        }
+
+        body.theme-dark .stat-card i,
+        body:has(#theme-toggle:checked) .stat-card i {
+            color: #79c0ff;
+        }
+
+        body.theme-dark .kicker-badge,
+        body:has(#theme-toggle:checked) .kicker-badge {
+            background: rgba(56, 139, 253, 0.12);
+            border-color: rgba(56, 139, 253, 0.35);
+            color: #79c0ff;
+        }
+
+        body.theme-dark .circle-menu-btn,
+        body:has(#theme-toggle:checked) .circle-menu-btn {
+            background: linear-gradient(135deg, #09254d 0%, #030f21 100%);
+            border-color: rgba(56, 139, 253, 0.4);
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.5);
+        }
+
+        body.theme-dark .circle-menu-btn i,
+        body:has(#theme-toggle:checked) .circle-menu-btn i {
+            color: #79c0ff;
+        }
+
+        body.theme-dark .dropdown-menu a,
+        body:has(#theme-toggle:checked) .dropdown-menu a {
+            color: #cbd5e1;
+            border-bottom-color: rgba(56, 139, 253, 0.12);
+        }
+
+        body.theme-dark .dropdown-menu a:hover,
+        body:has(#theme-toggle:checked) .dropdown-menu a:hover {
+            background: rgba(56, 139, 253, 0.15);
+            color: #58a6ff;
+        }
+
+        body.theme-dark footer,
+        body:has(#theme-toggle:checked) footer {
+            background: #020712;
+            border-top: 1px solid rgba(56, 139, 253, 0.18);
+            color: #64748b;
+        }
+
+        /* Toggle Button */
+        #theme-toggle {
+            display: none;
+        }
+
+        #theme-toggle:not(:checked) ~ .navbar .theme-btn::after {
+            content: "🌙";
+        }
+
+        body:has(#theme-toggle:checked) .theme-btn::after,
+        body.theme-dark .theme-btn::after {
+            content: "☀️";
+        }
+
+        .theme-btn {
+            cursor: pointer;
+            font-size: 19px;
+            background: rgba(197, 155, 39, 0.14);
+            border: 1px solid rgba(197, 155, 39, 0.35);
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            transition: all 0.25s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent-gold);
+        }
+
+        .theme-btn:hover {
+            background: rgba(197, 155, 39, 0.25);
+            transform: scale(1.08);
+        }
+
+        body.theme-dark .theme-btn,
+        body:has(#theme-toggle:checked) .theme-btn {
+            background: rgba(56, 139, 253, 0.15);
+            border-color: rgba(56, 139, 253, 0.35);
+            color: #79c0ff;
+        }
+
+        /* ============================================================
+           NAVBAR
+           ============================================================ */
+        .navbar {
+            background: var(--navbar-bg);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-bottom: 1px solid var(--navbar-border);
+            padding: 14px 28px;
+            position: sticky;
+            top: 0;
+            z-index: 200;
+            transition: background 0.4s ease, border 0.4s ease, box-shadow 0.4s ease;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+        }
+
+        .navdiv {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .logo a {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--text-heading);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            letter-spacing: -0.5px;
+            transition: transform 0.2s ease;
+        }
+
+        .logo-badge {
+            width: 32px;
+            height: 32px;
+            background: var(--gold-gradient);
+            color: #0c2340;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 16px;
+            box-shadow: 0 2px 8px rgba(197, 155, 39, 0.35);
+        }
+
+        .nav-right-controls {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .nav-links {
+            position: relative;
+            display: flex;
+            align-items: center;
+            list-style: none;
+            gap: 6px;
+            padding: 4px;
+            margin: 0;
+            background: rgba(197, 155, 39, 0.08);
+            border: 1px solid rgba(197, 155, 39, 0.2);
+            border-radius: 30px;
+        }
+
+        body.theme-dark .nav-links,
+        body:has(#theme-toggle:checked) .nav-links {
+            background: rgba(6, 21, 43, 0.7);
+            border-color: rgba(56, 139, 253, 0.25);
+        }
+
+        .nav-pill {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            height: 84%;
+            width: 0;
+            background: var(--nav-pill-bg);
+            border-radius: 20px;
+            box-shadow: 0 2px 10px rgba(197, 155, 39, 0.3);
+            transform: translateY(-50%);
+            transition: all 0.32s cubic-bezier(0.25, 1, 0.5, 1);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .nav-links li {
+            position: relative;
+            z-index: 1;
+        }
+
+        .nav-links a {
+            position: relative;
+            display: block;
+            padding: 8px 18px;
+            text-decoration: none;
+            color: var(--nav-link-color);
+            font-size: 14.5px;
+            font-weight: 700;
+            transition: color 0.2s ease;
+            user-select: none;
+            border-radius: 20px;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: #0c2340;
+        }
+
+        body.theme-dark .nav-links a:hover,
+        body.theme-dark .nav-links a.active,
+        body:has(#theme-toggle:checked) .nav-links a:hover,
+        body:has(#theme-toggle:checked) .nav-links a.active {
+            color: #ffffff;
+        }
+
+        /* Floating Circular Menu */
+        .circle-menu-wrapper {
+            position: fixed;
+            top: 85px;
+            left: 25px;
+            z-index: 250;
+        }
+
+        .circle-menu-btn {
+            width: 48px;
+            height: 48px;
+            background: #ffffff;
+            border: 2px solid rgba(197, 155, 39, 0.4);
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 18px rgba(197, 155, 39, 0.18);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease, border-color 0.3s ease;
+        }
+
+        .circle-menu-btn i {
+            font-size: 24px;
+            color: #c59b27;
+            transition: transform 0.35s ease;
+        }
+
+        .circle-menu-btn:hover {
+            transform: scale(1.08) rotate(4deg);
+            border-color: #c59b27;
+            box-shadow: 0 6px 24px rgba(197, 155, 39, 0.35);
+        }
+
+        .menu-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            z-index: 240;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 58px;
+            left: 0;
+            width: 250px;
+            background: #ffffff;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(197, 155, 39, 0.35);
+            border-radius: 16px;
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
+            padding: 8px 0;
+            list-style: none;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-12px) scale(0.96);
+            transform-origin: top left;
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease, visibility 0.3s ease;
+            z-index: 260;
+        }
+
+        .dropdown-menu a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 20px;
+            color: #0c2340;
+            font-size: 15px;
+            font-weight: 700;
+            text-decoration: none;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            transition: background 0.2s ease, color 0.2s ease, padding-left 0.2s ease;
+        }
+
+        .dropdown-menu li:last-child a {
+            border-bottom: none;
+        }
+
+        .dropdown-menu a:hover {
+            background: rgba(197, 155, 39, 0.1);
+            color: #b8860b;
+            padding-left: 26px;
+        }
+
+        #menu-toggle {
+            display: none;
+        }
+
+        #menu-toggle:checked ~ .menu-backdrop {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        #menu-toggle:checked ~ .circle-menu-wrapper .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0) scale(1);
+        }
+
+        #menu-toggle:checked ~ .circle-menu-wrapper .circle-menu-btn i {
+            transform: rotate(90deg);
+        }
+
+        /* ============================================================
+           PROJECT PAGE LAYOUT
+           ============================================================ */
+        .projects-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 50px 24px 100px;
+        }
+
+        .projects-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .kicker-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 16px;
+            background: var(--badge-bg);
+            border: 1px solid var(--badge-border);
+            border-radius: 30px;
+            color: var(--badge-text);
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+        }
+
+        .projects-header h1 {
+            color: var(--text-heading);
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: clamp(34px, 4.5vw, 48px);
+            font-weight: 700;
+            margin-bottom: 14px;
+            letter-spacing: -0.5px;
+        }
+
+        .projects-header p {
+            color: var(--text-body);
+            font-size: 17.5px;
+            max-width: 760px;
+            margin: 0 auto;
+            line-height: 1.8;
+        }
+
+        /* PROJECT CARDS */
+        .project-detail-card {
+            background: var(--bg-card);
+            border: 1px solid var(--card-border);
+            border-radius: 22px;
+            box-shadow: var(--card-shadow);
+            padding: 38px 34px;
+            margin-bottom: 35px;
+            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.4s ease, border-color 0.3s ease, background 0.3s ease;
+            position: relative;
+        }
+
+        .project-detail-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--card-hover-border);
+            box-shadow: var(--card-hover-shadow);
+        }
+
+        .project-tag {
+            display: inline-block;
+            padding: 5px 14px;
+            background: rgba(197, 155, 39, 0.12);
+            color: #8c680d;
+            font-size: 12.5px;
+            font-weight: 700;
+            border-radius: 20px;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border: 1px solid rgba(197, 155, 39, 0.25);
+        }
+
+        .project-detail-card h2 {
+            color: var(--text-heading);
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 14px;
+        }
+
+        .project-detail-card p {
+            color: var(--text-body);
+            font-size: 16px;
+            line-height: 1.8;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .project-features {
+            list-style: none;
+            margin: 20px 0 25px;
+            padding-left: 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 12px;
+        }
+
+        .project-features li {
+            font-size: 14.5px;
+            color: var(--text-body);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(197, 155, 39, 0.06);
+            padding: 12px 16px;
+            border-radius: 12px;
+            border: 1px solid rgba(197, 155, 39, 0.15);
+        }
+
+        .project-features li i {
+            color: #10b981;
+            font-size: 19px;
+            flex-shrink: 0;
+        }
+
+        .btn-action {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 13px 26px;
+            background: var(--btn-primary-bg);
+            color: var(--btn-primary-text);
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 15px;
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 14px rgba(197, 155, 39, 0.28);
+        }
+
+        .btn-action:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(197, 155, 39, 0.4);
+            filter: brightness(1.05);
+        }
+
+        .btn-action-primary {
+            background: var(--btn-primary-bg);
+            box-shadow: 0 6px 18px rgba(197, 155, 39, 0.35);
+        }
+
+        /* ============================================================
+           REVAMPED TIDAL TURBINE HYDROKINETIC SIMULATOR
+           ============================================================ */
+        .simulator-section {
+            display: none;
+            margin-top: 45px;
+            animation: slideUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .simulator-card {
+            background: #ffffff;
+            border: 1.5px solid rgba(197, 155, 39, 0.35);
+            border-radius: 24px;
+            padding: 35px;
+            box-shadow: 0 20px 50px rgba(197, 155, 39, 0.12);
+            position: relative;
+            overflow: hidden;
+            transition: background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+        }
+
+        /* Top Bar with Clear Exit Button (Section 10) */
+        .sim-top-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid rgba(197, 155, 39, 0.2);
+        }
+
+        body.theme-dark .sim-top-nav,
+        body:has(#theme-toggle:checked) .sim-top-nav {
+            border-bottom-color: rgba(56, 139, 253, 0.2);
+        }
+
+        .sim-exit-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 9px 18px;
+            background: #ffffff;
+            color: #dc2626;
+            border: 1.5px solid rgba(220, 38, 38, 0.35);
+            border-radius: 25px;
+            font-size: 13.5px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(220, 38, 38, 0.12);
+        }
+
+        .sim-exit-btn:hover {
+            background: #dc2626;
+            color: #ffffff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 14px rgba(220, 38, 38, 0.3);
+        }
+
+        body.theme-dark .sim-exit-btn,
+        body:has(#theme-toggle:checked) .sim-exit-btn {
+            background: rgba(220, 38, 38, 0.15);
+            border-color: rgba(220, 38, 38, 0.4);
+            color: #f87171;
+        }
+
+        body.theme-dark .sim-exit-btn:hover,
+        body:has(#theme-toggle:checked) .sim-exit-btn:hover {
+            background: #dc2626;
+            color: #ffffff;
+        }
+
+        .sim-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .sim-header h2 {
+            font-size: 28px;
+            font-weight: 700;
+            font-family: 'Playfair Display', Georgia, serif;
+            color: var(--text-heading);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .sim-header p {
+            color: var(--text-muted);
+            font-size: 15.5px;
+            max-width: 780px;
+            margin: 0 auto;
+        }
+
+        /* Marine Preset Bar */
+        .preset-bar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin: 20px 0;
+            padding: 10px 14px;
+            background: rgba(197, 155, 39, 0.08);
+            border-radius: 16px;
+        }
+
+        body.theme-dark .preset-bar,
+        body:has(#theme-toggle:checked) .preset-bar {
+            background: rgba(56, 139, 253, 0.08);
+        }
+
+        .preset-label {
+            font-size: 13px;
+            font-weight: 700;
+            color: #8c680d;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        body.theme-dark .preset-label,
+        body:has(#theme-toggle:checked) .preset-label {
+            color: #79c0ff;
+        }
+
+        .preset-btn {
+            padding: 6px 14px;
+            font-size: 12.5px;
+            font-weight: 700;
+            color: var(--text-heading);
+            background: #ffffff;
+            border: 1px solid rgba(197, 155, 39, 0.3);
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .preset-btn:hover, .preset-btn.active {
+            background: var(--btn-primary-bg);
+            color: var(--btn-primary-text);
+            box-shadow: 0 4px 10px rgba(197, 155, 39, 0.25);
+        }
+
+        body.theme-dark .preset-btn,
+        body:has(#theme-toggle:checked) .preset-btn {
+            background: #041021;
+            color: #cbd5e1;
+            border-color: rgba(56, 139, 253, 0.3);
+        }
+
+        body.theme-dark .preset-btn:hover,
+        body.theme-dark .preset-btn.active,
+        body:has(#theme-toggle:checked) .preset-btn:hover,
+        body:has(#theme-toggle:checked) .preset-btn.active {
+            background: #1f6feb;
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(31, 111, 235, 0.4);
+        }
+
+        /* Canvas & HUD Area */
+        .canvas-container {
+            width: 100%;
+            height: 420px;
+            background: linear-gradient(180deg, #021a30 0%, #031020 60%, #010810 100%);
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.7), 0 8px 30px rgba(0, 0, 0, 0.2);
+            border: 2px solid rgba(197, 155, 39, 0.3);
+        }
+
+        body.theme-dark .canvas-container,
+        body:has(#theme-toggle:checked) .canvas-container {
+            border-color: rgba(56, 139, 253, 0.35);
+        }
+
+        canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        /* Underwater HUD Overlay */
+        .underwater-hud {
+            position: absolute;
+            top: 16px;
+            left: 18px;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(2, 20, 36, 0.85);
+            backdrop-filter: blur(8px);
+            padding: 6px 14px;
+            border-radius: 20px;
+            border: 1px solid rgba(88, 166, 255, 0.4);
+            color: #79c0ff;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 12.5px;
+        }
+
+        .hud-live-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #10b981;
+            box-shadow: 0 0 10px #10b981;
+            animation: pulseDot 1.5s infinite;
+        }
+
+        @keyframes pulseDot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(0.85); }
+        }
+
+        .hud-audio-btn {
+            position: absolute;
+            top: 16px;
+            right: 18px;
+            z-index: 10;
+            background: rgba(2, 20, 36, 0.85);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(88, 166, 255, 0.4);
+            color: #79c0ff;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: bold;
+            transition: all 0.2s ease;
+        }
+
+        .hud-audio-btn:hover {
+            background: #58a6ff;
+            color: #090d12;
+        }
+
+        /* Simulator Controls Layout */
+        .sim-controls-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            background: rgba(197, 155, 39, 0.06);
+            padding: 24px;
+            border-radius: 18px;
+            border: 1px solid rgba(197, 155, 39, 0.15);
+            margin: 24px 0;
+        }
+
+        body.theme-dark .sim-controls-grid,
+        body:has(#theme-toggle:checked) .sim-controls-grid {
+            background: rgba(6, 21, 43, 0.7);
+            border-color: rgba(56, 139, 253, 0.2);
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .control-group label {
+            font-weight: 700;
+            font-size: 14px;
+            display: flex;
+            justify-content: space-between;
+            color: var(--text-heading);
+        }
+
+        body.theme-dark .control-group label,
+        body:has(#theme-toggle:checked) .control-group label {
+            color: #ffffff;
+        }
+
+        .control-group label span {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 14.5px;
+            color: #8c680d;
+        }
+
+        body.theme-dark .control-group label span,
+        body:has(#theme-toggle:checked) .control-group label span {
+            color: #79c0ff;
+        }
+
+        .control-group input[type="range"] {
+            width: 100%;
+            height: 7px;
+            accent-color: var(--accent-gold);
+            cursor: pointer;
+            border-radius: 10px;
+        }
+
+        body.theme-dark .control-group input[type="range"],
+        body:has(#theme-toggle:checked) .control-group input[type="range"] {
+            accent-color: #388bfd;
+        }
+
+        .pitch-indicator-tip {
+            font-size: 11.5px;
+            color: var(--text-muted);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* Stats Grid */
+        .sim-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+        }
+
+        .stat-card {
+            background: #ffffff;
+            padding: 20px 16px;
+            border-radius: 16px;
+            text-align: center;
+            border: 1px solid var(--card-border);
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.04);
+            transition: transform 0.2s ease, border-color 0.2s ease, background 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--card-hover-border);
+            box-shadow: 0 10px 25px rgba(197, 155, 39, 0.15);
+        }
+
+        .stat-card i {
+            font-size: 26px;
+            color: var(--accent-gold);
+            margin-bottom: 6px;
+            display: inline-block;
+        }
+
+        .stat-card .label {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .stat-card .val {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--text-heading);
+            font-family: 'Share Tech Mono', monospace;
+        }
+
+        /* MODAL STYLES */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(0, 0, 0, 0.65);
+            backdrop-filter: blur(6px);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-overlay:target,
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-box {
+            background: #ffffff;
+            backdrop-filter: blur(16px);
+            padding: 36px 30px;
+            border-radius: 22px;
+            max-width: 450px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 16px 45px rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(197, 155, 39, 0.3);
+            animation: modalPop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes modalPop {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-box h3 {
+            color: var(--text-heading);
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .modal-box p {
+            color: var(--text-muted);
+            font-size: 15.5px;
+            line-height: 1.6;
+            margin-bottom: 26px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .modal-btn {
+            padding: 12px 24px;
+            border-radius: 12px;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 15px;
+            transition: all 0.2s ease;
+        }
+
+        .yes-btn {
+            background: var(--btn-primary-bg);
+            color: var(--btn-primary-text);
+            box-shadow: 0 4px 14px rgba(197, 155, 39, 0.3);
+        }
+
+        .yes-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(197, 155, 39, 0.4);
+        }
+
+        .cancel-btn {
+            background-color: #f1f5f9;
+            color: #334155;
+        }
+
+        .cancel-btn:hover {
+            background-color: #e2e8f0;
+            transform: translateY(-2px);
+        }
+
+        /* FLOATING BACK TO TOP */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 48px;
+            height: 48px;
+            background: #ffffff;
+            color: var(--accent-gold-dark);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            font-size: 20px;
+            font-weight: bold;
+            box-shadow: 0 8px 24px rgba(197, 155, 39, 0.25);
+            z-index: 99;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1.5px solid rgba(197, 155, 39, 0.35);
+        }
+
+        .back-to-top:hover {
+            transform: translateY(-4px) scale(1.06);
+            border-color: var(--accent-gold);
+            box-shadow: 0 12px 30px rgba(197, 155, 39, 0.35);
+        }
+
+        /* FOOTER */
+        footer {
+            margin-top: 80px;
+            padding: 40px 24px;
+            background: #ffffff;
+            color: #64748b;
+            text-align: center;
+            border-top: 1px solid rgba(197, 155, 39, 0.2);
+            transition: background 0.4s ease, border 0.4s ease;
+        }
+
+        footer p {
+            font-size: 14px;
+            color: #64748b;
+        }
+
+        footer a {
+            color: var(--accent-gold);
+            text-decoration: none;
+        }
+
+        @media (max-width: 900px) {
+            .circle-menu-wrapper { top: 75px; left: 15px; }
+            .project-detail-card, .simulator-card { padding: 24px; }
+            .canvas-container { height: 320px; }
+        }
+    </style>
+</head>
+
+<body id="top">
+
+    <!-- CHECKBOXES FOR THEME & CIRCLE MENU -->
+    <input type="checkbox" id="theme-toggle">
+    <input type="checkbox" id="menu-toggle">
+
+    <label for="menu-toggle" class="menu-backdrop" aria-label="Close menu backdrop"></label>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="navdiv">
+            <div class="logo">
+                <a href="Ruel C. Momo PT 2.html#home">
+                    <span class="logo-badge">R</span>
+                    <span>STUDIO 2026</span>
+                </a>
+            </div>
+
+            <div class="nav-right-controls">
+                <ul class="nav-links">
+                    <div class="nav-pill" id="nav-pill"></div>
+                    <li><a href="Ruel C. Momo PT 2.html">Home</a></li>
+                    <li><a href="hobbies.html">Hobbies</a></li>
+                    <li><a href="goals.html">Goals</a></li>
+                </ul>
+
+                <label for="theme-toggle" class="theme-btn" title="Toggle Light/Dark Mode" aria-label="Toggle Light or Dark Mode"></label>
+            </div>
+        </div>
+    </nav>
+
+    <!-- FLOATING CIRCULAR HAMBURGER BUTTON & DROPDOWN -->
+    <div class="circle-menu-wrapper">
+        <label for="menu-toggle" class="circle-menu-btn" title="Open Navigation Menu" aria-label="Open Navigation Menu">
+            <i class='bx bx-menu'></i>
+        </label>
+
+        <ul class="dropdown-menu">
+            <li><a href="Ruel C. Momo PT 2.html#home"><i class='bx bx-home-alt-2'></i> Home</a></li>
+            <li><a href="Ruel C. Momo PT 2.html#about"><i class='bx bx-user'></i> About</a></li>
+            <li><a href="Ruel C. Momo PT 2.html#skills"><i class='bx bx-code-alt'></i> Skills</a></li>
+            <li><a href="hobbies.html"><i class='bx bx-music'></i> Hobbies</a></li>
+            <li><a href="project.html"><i class='bx bx-folder'></i> Project</a></li>
+            <li><a href="Ruel C. Momo PT 2.html#contact"><i class='bx bx-envelope'></i> Contact</a></li>
+        </ul>
+    </div>
+
+    <main class="projects-container">
+
+        <!-- HEADER SECTION -->
+        <div class="projects-header">
+            <div class="kicker-badge">
+                <i class='bx bx-star'></i> Grade 8 Schwann • STE Program
+            </div>
+            <h1>Featured School Projects</h1>
+            <p>Welcome to my dedicated project showcase! Below is a detailed breakdown of my interactive Scratch game, web development achievements, and scientific research on coastal tidal turbines.</p>
+        </div>
+
+        <!-- PROJECT 1: SCRATCH GAME -->
+        <article class="project-detail-card">
+            <span class="project-tag">Game Design & Scratch</span>
+            <h2>Path Unlocked - Obstacle Game</h2>
+            <p>
+                "Path Unlocked" is an interactive geometry-based precision obstacle game inspired by mechanics from Geometry Dash. Developed in Scratch, the game challenges players to navigate a square character through moving spikes, precise platform jumps, and increasing speed levels. Building this project provided a strong understanding of event listeners, variables, collision detection logic, and custom animation loops.
+            </p>
+
+            <ul class="project-features">
+                <li><i class='bx bx-check-circle'></i> Precision jumping mechanics and obstacle collision logic</li>
+                <li><i class='bx bx-check-circle'></i> Progressive level difficulty and high score tracking</li>
+                <li><i class='bx bx-check-circle'></i> Custom visual effects and sound timing</li>
+            </ul>
+
+            <a href="#scratch-prompt" class="btn-action">Play Game on Scratch 🎮</a>
+        </article>
+
+        <!-- PROJECT 2: WEB DEVELOPMENT -->
+        <article class="project-detail-card">
+            <span class="project-tag">Web Development</span>
+            <h2>Responsive Student Portfolio Website</h2>
+            <p>
+                This portfolio website is a personal web development project designed using pure HTML and modern CSS. Built without complex JavaScript frameworks, it features advanced CSS techniques including CSS Flexbox layouts, frosted glassmorphism cards (`backdrop-filter`), CSS variables for smooth Light/Dark theme switching, keyframe entrance animations, and responsive styling.
+            </p>
+
+            <ul class="project-features">
+                <li><i class='bx bx-check-circle'></i> Modern Glassmorphism & Ambient Glow UI</li>
+                <li><i class='bx bx-check-circle'></i> Pure CSS Light/Dark theme switch using pseudo-selectors</li>
+                <li><i class='bx bx-check-circle'></i> Multi-page navigation structure with smooth hover pill effects</li>
+            </ul>
+
+            <a href="Ruel C. Momo PT 2.html" class="btn-action">
+                <i class='bx bx-home'></i> Back to Home Portfolio
+            </a>
+        </article>
+
+        <!-- PROJECT 3: RESEARCH PAPER / SIP -->
+        <article class="project-detail-card" id="sip-article">
+            <span class="project-tag">Scientific Research</span>
+            <h2>Modified Tidal Turbine Research (SIP)</h2>
+            <p>
+                This Science Investigatory Project (SIP) explores the development and testing of a modified tidal turbine designed to capture renewable kinetic energy from ocean currents off Philippine coasts. The research focuses on optimizing blade angle curvature and rotor hydrodynamics to generate stable clean electricity even in low-velocity coastal tides, presenting a sustainable eco-friendly solution for off-grid coastal communities.
+            </p>
+
+            <ul class="project-features">
+                <li><i class='bx bx-check-circle'></i> Hydrodynamic blade curvature testing for maximum efficiency</li>
+                <li><i class='bx bx-check-circle'></i> Renewable energy application for coastal Philippine water channels</li>
+                <li><i class='bx bx-check-circle'></i> Scientific method data collection, trials, and hydrodynamic simulation</li>
+            </ul>
+
+            <!-- TRIGGER BUTTON FOR SIMULATOR MODAL -->
+            <button type="button" class="btn-action btn-action-primary" id="open-sim-modal-btn">
+                <i class='bx bx-water'></i> Open Tidal Turbine Simulator 🌊
+            </button>
+        </article>
+
+        <!-- REVAMPED SIMULATOR SECTION WITH CLEAR EXIT BUTTON (SECTION 10) -->
+        <section id="simulator-section" class="simulator-section">
+            <div class="simulator-card">
+                <!-- Top Navigation & Clearly Visible Exit Button -->
+                <div class="sim-top-nav">
+                    <div class="kicker-badge" style="margin-bottom:0;">
+                        <i class='bx bx-chip'></i> Real-Time Hydrokinetic Physics Engine
+                    </div>
+                    <button type="button" class="sim-exit-btn" id="exit-sim-btn" onclick="exitTurbineSimulation()" title="Exit Simulator">
+                        <i class='bx bx-x' style="font-size:18px;"></i>
+                        <span>Exit Simulator</span>
+                    </button>
+                </div>
+
+                <div class="sim-header">
+                    <h2>Interactive Tidal Turbine Hydrokinetic Simulator</h2>
+                    <p>Simulate hydrodynamic rotation, vortex shedding, and clean energy output in coastal Philippine waters with real-time physics calculations.</p>
+                </div>
+
+                <!-- PRESET TIDAL CURRENT CHANNELS (PHILIPPINES) -->
+                <div class="preset-bar">
+                    <span class="preset-label"><i class='bx bx-map-pin'></i> Current Presets:</span>
+                    <button type="button" class="preset-btn" onclick="applyPreset(3.8, 24, 'San Bernardino Strait')">San Bernardino Strait (3.8 m/s)</button>
+                    <button type="button" class="preset-btn active" onclick="applyPreset(2.5, 25, 'Standard Marine')">Standard Marine (2.5 m/s)</button>
+                    <button type="button" class="preset-btn" onclick="applyPreset(1.8, 28, 'Iloilo Coastal Current')">Iloilo Coast (1.8 m/s)</button>
+                    <button type="button" class="preset-btn" onclick="applyPreset(0.9, 16, 'Slack Low Tide')">Slack Tide (0.9 m/s)</button>
+                </div>
+
+                <div class="sim-layout">
+                    <!-- UNDERWATER TURBINE CANVAS -->
+                    <div class="canvas-container">
+                        <canvas id="turbineCanvas"></canvas>
+                        
+                        <div class="underwater-hud">
+                            <span class="hud-live-dot"></span>
+                            <span id="hud-location">HYDRO-FLOW ACTIVE: 2.5 m/s</span>
+                        </div>
+
+                        <button type="button" class="hud-audio-btn" id="audio-toggle-btn" onclick="toggleAudioFeedback()">
+                            <i class='bx bx-volume-mute' id="audio-icon"></i>
+                            <span id="audio-label">Hydro Audio: Off</span>
+                        </button>
+                    </div>
+
+                    <!-- INTERACTIVE DUAL SLIDER CONTROLS -->
+                    <div class="sim-controls-grid">
+                        <div class="control-group">
+                            <label>
+                                <span><i class='bx bx-wind'></i> Ocean Current Velocity:</span>
+                                <span id="current-val">2.5 m/s</span>
+                            </label>
+                            <input type="range" id="current-slider" min="0.5" max="5.0" step="0.1" value="2.5" aria-label="Ocean current velocity slider">
+                            <div class="pitch-indicator-tip">
+                                <span>0.5 m/s (Gentle)</span>
+                                <span>2.5 m/s (Optimal)</span>
+                                <span>5.0 m/s (Torque Surge)</span>
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <label>
+                                <span><i class='bx bx-compass'></i> Blade Pitch Angle:</span>
+                                <span id="pitch-val">25°</span>
+                            </label>
+                            <input type="range" id="pitch-slider" min="5" max="60" step="1" value="25" aria-label="Blade pitch angle slider">
+                            <div class="pitch-indicator-tip">
+                                <span>5° (Stall)</span>
+                                <span style="color:#10b981; font-weight:bold;">20°-30° (Max $C_p$)</span>
+                                <span>60° (Feathered)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- LIVE PERFORMANCE TELEMETRY STATS -->
+                    <div class="sim-stats">
+                        <div class="stat-card">
+                            <i class='bx bx-sync'></i>
+                            <div class="label">Rotor Speed</div>
+                            <div class="val" id="stat-rpm">0 RPM</div>
+                        </div>
+
+                        <div class="stat-card">
+                            <i class='bx bx-bolt-circle'></i>
+                            <div class="label">Power Output</div>
+                            <div class="val" id="stat-power">0 kW</div>
+                        </div>
+
+                        <div class="stat-card">
+                            <i class='bx bx-line-chart'></i>
+                            <div class="label">Efficiency ($C_p$)</div>
+                            <div class="val" id="stat-eff">0%</div>
+                        </div>
+
+                        <div class="stat-card">
+                            <i class='bx bx-home-heart'></i>
+                            <div class="label">Homes Powered</div>
+                            <div class="val" id="stat-homes">0 Homes</div>
+                        </div>
+
+                        <div class="stat-card">
+                            <i class='bx bx-battery'></i>
+                            <div class="label">Energy Generated</div>
+                            <div class="val" id="stat-kwh">0.0 kWh</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- SCRATCH POPUP MODAL -->
+    <div id="scratch-prompt" class="modal-overlay">
+        <div class="modal-box">
+            <h3>Play Scratch Game?</h3>
+            <p>Are you sure you want to open "Path Unlocked" on Scratch in a new tab?</p>
+            <div class="modal-buttons">
+                <a href="https://scratch.mit.edu/projects/1365695405" target="_blank" rel="noopener noreferrer" class="modal-btn yes-btn">Yes, Play! 🎮</a>
+                <a href="#close" class="modal-btn cancel-btn" onclick="document.getElementById('scratch-prompt').classList.remove('active');">Cancel</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- SIMULATOR CONFIRMATION MODAL -->
+    <div id="sim-prompt" class="modal-overlay">
+        <div class="modal-box">
+            <h3>🌊 Launch Tidal Turbine Simulator?</h3>
+            <p>Initialize the real-time hydrodynamic physics model and observe kinetic rotor rotation with underwater current simulation?</p>
+            <div class="modal-buttons">
+                <button type="button" id="sim-confirm-btn" class="modal-btn yes-btn">Yes, Launch! 🚀</button>
+                <button type="button" id="sim-cancel-btn" class="modal-btn cancel-btn">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- FLOATING BACK TO TOP BUTTON -->
+    <a href="#top" class="back-to-top" title="Back to Top" aria-label="Back to Top">↑</a>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>&copy; 2026 Ruel C. Momo Jr. • Grade 8 Schwann • STE Program • <a href="Ruel C. Momo PT 2.html">Return to Main Portfolio</a></p>
+    </footer>
+
+    <!-- ============================================================
+         JAVASCRIPT CONTROLLERS
+         ============================================================ -->
+    <!-- THEME SYNCHRONIZATION SCRIPT (SECTION 5) -->
+    <script>
+        function getAutomaticTimeTheme() {
+            const now = new Date();
+            const ph = new Date(now.getTime() + now.getTimezoneOffset() * 60000 + 8 * 3600000);
+            const h = ph.getHours();
+            return (h >= 18 || h < 5) ? 'dark' : 'light';
+        }
+
+        function initThemeSync() {
+            const themeCheckbox = document.getElementById('theme-toggle');
+            let savedTheme = localStorage.getItem('portfolio_theme');
+
+            if (!savedTheme) {
+                savedTheme = getAutomaticTimeTheme();
+            }
+
+            applyTheme(savedTheme);
+
+            if (themeCheckbox) {
+                themeCheckbox.checked = (savedTheme === 'dark');
+                themeCheckbox.addEventListener('change', () => {
+                    const newTheme = themeCheckbox.checked ? 'dark' : 'light';
+                    localStorage.setItem('portfolio_theme', newTheme);
+                    applyTheme(newTheme);
+                });
+            }
+        }
+
+        function applyTheme(theme) {
+            const themeCheckbox = document.getElementById('theme-toggle');
+            if (themeCheckbox) {
+                themeCheckbox.checked = (theme === 'dark');
+            }
+            if (theme === 'dark') {
+                document.body.classList.add('theme-dark');
+            } else {
+                document.body.classList.remove('theme-dark');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', initThemeSync);
+    </script>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        /* --- NAV PILL LOGIC --- */
+        const navLinks = document.querySelectorAll('.nav-links a');
+        const pill = document.getElementById('nav-pill');
+
+        function movePill(targetLink) {
+            if (!targetLink || !pill) return;
+            const linkRect = targetLink.getBoundingClientRect();
+            const parentRect = targetLink.closest('.nav-links').getBoundingClientRect();
+
+            pill.style.width = `${linkRect.width}px`;
+            pill.style.left = `${linkRect.left - parentRect.left}px`;
+        }
+
+        let activeLink = document.querySelector('.nav-links a.active') || navLinks[0];
+
+        navLinks.forEach(link => {
+            link.addEventListener('mouseenter', (e) => {
+                movePill(e.target);
+            });
+        });
+
+        const navContainer = document.querySelector('.nav-links');
+        if (navContainer) {
+            navContainer.addEventListener('mouseleave', () => {
+                if (activeLink) movePill(activeLink);
+            });
+        }
+
+        if (activeLink) {
+            setTimeout(() => movePill(activeLink), 150);
+        }
+
+        window.addEventListener('resize', () => {
+            if (activeLink) movePill(activeLink);
+        });
+
+        /* --- SIMULATOR POPUP & REVEAL LOGIC --- */
+        const openSimBtn = document.getElementById('open-sim-modal-btn');
+        const simModal = document.getElementById('sim-prompt');
+        const simConfirmBtn = document.getElementById('sim-confirm-btn');
+        const simCancelBtn = document.getElementById('sim-cancel-btn');
+        const simSection = document.getElementById('simulator-section');
+
+        let simInitialized = false;
+
+        if (openSimBtn && simModal) {
+            openSimBtn.addEventListener('click', () => {
+                simModal.classList.add('active');
+            });
+        }
+
+        if (simCancelBtn && simModal) {
+            simCancelBtn.addEventListener('click', () => {
+                simModal.classList.remove('active');
+            });
+        }
+
+        if (simConfirmBtn && simSection && simModal) {
+            simConfirmBtn.addEventListener('click', () => {
+                simModal.classList.remove('active');
+                simSection.style.display = 'block';
+                simSection.scrollIntoView({ behavior: 'smooth' });
+
+                if (!simInitialized) {
+                    initTurbineSimulation();
+                    simInitialized = true;
+                }
+            });
+        }
+    });
+
+    /* --- EXIT SIMULATOR FUNCTIONALITY (SECTION 10) --- */
+    function exitTurbineSimulation() {
+        const simSection = document.getElementById('simulator-section');
+        if (simSection) {
+            simSection.style.display = 'none';
+        }
+
+        // Silence audio hum if running
+        if (isAudioOn) {
+            toggleAudioFeedback();
+        }
+
+        // Smoothly return user to the SIP research article view
+        const sipArticle = document.getElementById('sip-article');
+        if (sipArticle) {
+            sipArticle.scrollIntoView({ behavior: 'smooth' });
+        }
+    }
+
+    /* --- PRESET SCENARIO BUTTONS --- */
+    function applyPreset(velocity, pitch, name) {
+        const cSlider = document.getElementById('current-slider');
+        const pSlider = document.getElementById('pitch-slider');
+        const hudLoc = document.getElementById('hud-location');
+
+        if (cSlider) {
+            cSlider.value = velocity;
+            cSlider.dispatchEvent(new Event('input'));
+        }
+        if (pSlider) {
+            pSlider.value = pitch;
+            pSlider.dispatchEvent(new Event('input'));
+        }
+        if (hudLoc) {
+            hudLoc.textContent = `LOCATION: ${name.toUpperCase()} (${velocity} m/s)`;
+        }
+
+        document.querySelectorAll('.preset-btn').forEach(btn => {
+            btn.classList.remove('active');
+            if (btn.textContent.includes(name.split(' ')[0])) {
+                btn.classList.add('active');
+            }
+        });
+    }
+
+    /* --- WEB AUDIO HYDRO-ACOUSTIC ENGINE --- */
+    let audioCtx = null;
+    let audioOsc = null;
+    let audioGain = null;
+    let isAudioOn = false;
+
+    function toggleAudioFeedback() {
+        isAudioOn = !isAudioOn;
+        const icon = document.getElementById('audio-icon');
+        const label = document.getElementById('audio-label');
+
+        if (isAudioOn) {
+            if (!audioCtx) {
+                const AC = window.AudioContext || window.webkitAudioContext;
+                if (AC) audioCtx = new AC();
+            }
+            if (audioCtx && audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            if (!audioOsc && audioCtx) {
+                audioOsc = audioCtx.createOscillator();
+                audioGain = audioCtx.createGain();
+                audioOsc.type = 'triangle';
+                audioOsc.frequency.setValueAtTime(60, audioCtx.currentTime);
+                audioGain.gain.setValueAtTime(0.04, audioCtx.currentTime);
+                audioOsc.connect(audioGain);
+                audioGain.connect(audioCtx.destination);
+                audioOsc.start();
+            } else if (audioGain) {
+                audioGain.gain.setValueAtTime(0.04, audioCtx.currentTime);
+            }
+            if (icon) icon.className = 'bx bx-volume-full';
+            if (label) label.textContent = 'Hydro Audio: On';
+        } else {
+            if (audioGain && audioCtx) {
+                audioGain.gain.setValueAtTime(0, audioCtx.currentTime);
+            }
+            if (icon) icon.className = 'bx bx-volume-mute';
+            if (label) label.textContent = 'Hydro Audio: Off';
+        }
+    }
+
+    /* --- REAL-TIME HYDRODYNAMIC SIMULATION ENGINE --- */
+    function initTurbineSimulation() {
+        const canvas = document.getElementById('turbineCanvas');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+
+        const currentSlider = document.getElementById('current-slider');
+        const pitchSlider = document.getElementById('pitch-slider');
+        const currentValText = document.getElementById('current-val');
+        const pitchValText = document.getElementById('pitch-val');
+
+        const rpmText = document.getElementById('stat-rpm');
+        const powerText = document.getElementById('stat-power');
+        const effText = document.getElementById('stat-eff');
+        const homesText = document.getElementById('stat-homes');
+        const kwhText = document.getElementById('stat-kwh');
+        const hudLoc = document.getElementById('hud-location');
+
+        function resizeCanvas() {
+            canvas.width = canvas.parentElement.clientWidth;
+            canvas.height = canvas.parentElement.clientHeight;
+        }
+
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        let angle = 0;
+        let currentVelocity = parseFloat(currentSlider.value);
+        let pitchAngle = parseFloat(pitchSlider.value);
+        let totalKwh = 0;
+        let lastTimestamp = performance.now();
+
+        const particles = [];
+        const particleCount = 80;
+        for (let i = 0; i < particleCount; i++) {
+            particles.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                len: Math.random() * 24 + 12,
+                speedMultiplier: Math.random() * 0.5 + 0.75,
+                alpha: Math.random() * 0.4 + 0.3
+            });
+        }
+
+        const vortices = [];
+        let vortexTimer = 0;
+
+        currentSlider.addEventListener('input', (e) => {
+            currentVelocity = parseFloat(e.target.value);
+            currentValText.textContent = `${currentVelocity.toFixed(1)} m/s`;
+            if (hudLoc && !hudLoc.textContent.includes('LOCATION:')) {
+                hudLoc.textContent = `HYDRO-FLOW ACTIVE: ${currentVelocity.toFixed(1)} m/s`;
+            }
+        });
+
+        pitchSlider.addEventListener('input', (e) => {
+            pitchAngle = parseFloat(e.target.value);
+            pitchValText.textContent = `${pitchAngle}°`;
+        });
+
+        function render(now) {
+            const dt = (now - lastTimestamp) / 1000;
+            lastTimestamp = now;
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const pitchRad = (pitchAngle * Math.PI) / 180;
+            const optimalFactor = Math.sin(pitchRad * 2.1);
+            const efficiency = Math.max(0.04, Math.min(0.48, optimalFactor * 0.48));
+
+            const density = 1025;
+            const radius = 2.4;
+            const sweptArea = Math.PI * Math.pow(radius, 2);
+            const powerWatts = 0.5 * density * sweptArea * Math.pow(currentVelocity, 3) * efficiency;
+            const powerKw = powerWatts / 1000;
+
+            const rpm = Math.round(currentVelocity * 17.5 * (efficiency / 0.48));
+            const homes = (powerKw / 1.2).toFixed(1);
+
+            totalKwh += (powerKw * (dt / 3600));
+
+            rpmText.textContent = `${rpm} RPM`;
+            powerText.textContent = `${powerKw.toFixed(1)} kW`;
+            effText.textContent = `${(efficiency * 100).toFixed(1)}%`;
+            homesText.textContent = `${homes}`;
+            kwhText.textContent = `${totalKwh.toFixed(2)} kWh`;
+
+            if (isAudioOn && audioOsc && audioCtx) {
+                const targetFreq = 40 + (rpm * 1.8);
+                audioOsc.frequency.setValueAtTime(targetFreq, audioCtx.currentTime);
+            }
+
+            ctx.save();
+            const rayGradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+            rayGradient.addColorStop(0, 'rgba(56, 189, 248, 0.12)');
+            rayGradient.addColorStop(0.5, 'rgba(3, 105, 161, 0.05)');
+            rayGradient.addColorStop(1, 'rgba(2, 6, 23, 0)');
+            ctx.fillStyle = rayGradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.restore();
+
+            particles.forEach(p => {
+                p.x += currentVelocity * p.speedMultiplier * 2.8;
+                if (p.x > canvas.width) {
+                    p.x = 0;
+                    p.y = Math.random() * (canvas.height - 40);
+                }
+
+                ctx.strokeStyle = `rgba(56, 189, 248, ${p.alpha})`;
+                ctx.lineWidth = 1.8;
+                ctx.beginPath();
+                ctx.moveTo(p.x, p.y);
+                ctx.lineTo(p.x + p.len * (currentVelocity / 2), p.y);
+                ctx.stroke();
+            });
+
+            const cx = canvas.width / 2;
+            const cy = canvas.height / 2 - 15;
+
+            ctx.fillStyle = '#081420';
+            ctx.fillRect(0, canvas.height - 35, canvas.width, 35);
+            ctx.strokeStyle = 'rgba(56, 189, 248, 0.2)';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(0, canvas.height - 35);
+            for (let x = 0; x <= canvas.width; x += 40) {
+                const yOff = Math.sin(x * 0.03) * 4;
+                ctx.lineTo(x, canvas.height - 35 + yOff);
+            }
+            ctx.stroke();
+
+            ctx.fillStyle = '#1e293b';
+            ctx.beginPath();
+            ctx.moveTo(cx - 14, cy);
+            ctx.lineTo(cx + 14, cy);
+            ctx.lineTo(cx + 28, canvas.height - 35);
+            ctx.lineTo(cx - 28, canvas.height - 35);
+            ctx.closePath();
+            ctx.fill();
+
+            ctx.strokeStyle = 'rgba(148, 163, 184, 0.3)';
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
+
+            angle += (rpm * 0.0055);
+
+            vortexTimer += dt;
+            if (vortexTimer > 0.08 && rpm > 5) {
+                vortexTimer = 0;
+                const bladeCount = 3;
+                const bladeLen = Math.min(canvas.width, canvas.height) * 0.31;
+                for (let i = 0; i < bladeCount; i++) {
+                    const bAngle = angle + (i * (2 * Math.PI / bladeCount));
+                    const tipX = cx + Math.sin(bAngle) * bladeLen;
+                    const tipY = cy - Math.cos(bAngle) * bladeLen;
+                    vortices.push({
+                        x: tipX,
+                        y: tipY,
+                        r: Math.random() * 3 + 1.5,
+                        alpha: 0.75,
+                        vx: currentVelocity * 2.2 + Math.random(),
+                        vy: (Math.random() - 0.5) * 1.5
+                    });
+                }
+            }
+
+            for (let i = vortices.length - 1; i >= 0; i--) {
+                const v = vortices[i];
+                v.x += v.vx;
+                v.y += v.vy;
+                v.alpha -= 0.016;
+                v.r += 0.08;
+
+                if (v.alpha <= 0 || v.x > canvas.width) {
+                    vortices.splice(i, 1);
+                    continue;
+                }
+
+                ctx.fillStyle = `rgba(224, 242, 254, ${v.alpha})`;
+                ctx.beginPath();
+                ctx.arc(v.x, v.y, v.r, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            ctx.save();
+            ctx.translate(cx, cy);
+
+            const bladeCount = 3;
+            const bladeLen = Math.min(canvas.width, canvas.height) * 0.31;
+
+            for (let i = 0; i < bladeCount; i++) {
+                ctx.save();
+                ctx.rotate(angle + (i * (2 * Math.PI / bladeCount)));
+
+                const bladeGrad = ctx.createLinearGradient(0, 0, 0, -bladeLen);
+                bladeGrad.addColorStop(0, '#64748b');
+                bladeGrad.addColorStop(0.3, '#0284c7');
+                bladeGrad.addColorStop(0.75, '#38bdf8');
+                bladeGrad.addColorStop(1, '#bae6fd');
+
+                ctx.fillStyle = bladeGrad;
+                ctx.beginPath();
+                ctx.moveTo(-10, 0);
+                ctx.bezierCurveTo(-16, -bladeLen * 0.45, -8, -bladeLen * 0.9, 0, -bladeLen);
+                ctx.bezierCurveTo(8, -bladeLen * 0.9, 16, -bladeLen * 0.45, 10, 0);
+                ctx.closePath();
+                ctx.fill();
+
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.75)';
+                ctx.lineWidth = 1.5;
+                ctx.beginPath();
+                ctx.moveTo(-2, -8);
+                ctx.lineTo(-2, -bladeLen + 8);
+                ctx.stroke();
+
+                ctx.strokeStyle = 'rgba(7, 85, 139, 0.5)';
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.moveTo(-8, -bladeLen * 0.5);
+                ctx.lineTo(8, -bladeLen * 0.5);
+                ctx.stroke();
+
+                ctx.restore();
+            }
+
+            ctx.beginPath();
+            ctx.arc(0, 0, 24, 0, Math.PI * 2);
+            ctx.fillStyle = '#0369a1';
+            ctx.fill();
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = 3;
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.arc(0, 0, 10, 0, Math.PI * 2);
+            ctx.fillStyle = rpm > 10 ? '#38bdf8' : '#94a3b8';
+            ctx.fill();
+
+            ctx.beginPath();
+            ctx.arc(0, 0, 18, 0, Math.PI * 2);
+            ctx.strokeStyle = rpm > 20 ? 'rgba(16, 185, 129, 0.8)' : 'rgba(255, 223, 112, 0.6)';
+            ctx.lineWidth = 2.5;
+            ctx.stroke();
+
+            ctx.restore();
+
+            requestAnimationFrame(render);
+        }
+
+        requestAnimationFrame(render);
+    }
+    </script>
+</body>
+</html>

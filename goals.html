@@ -1,0 +1,3692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goals & Solar System Orbit | Ruel C. Momo Jr.</title>
+    <meta name="description" content="Explore Ruel C. Momo Jr.'s interactive 3D Solar System of Goals, featuring playable minigames, the Philippine Top 5 Hiking bucket list with Mt. Apo completed, coding challenges, research simulators, and productivity systems.">
+
+    <!-- GOOGLE FONTS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&family=Share+Tech+Mono&family=Fira+Code:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- BOXICONS CDN -->
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+
+    <!-- THREE.JS & ORBITCONTROLS CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+    <style>
+        /* ============================================================
+           CSS RESET & COSMIC DESIGN THEME (DEEP BLACK SPACE)
+           ============================================================ */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --space-bg: #030712;
+            --accent-gold: #ffdf70;
+            --accent-gold-dark: #c59b27;
+            --accent-cyan: #38bdf8;
+            --accent-emerald: #10b981;
+            --accent-purple: #a855f7;
+            --accent-rose: #f43f5e;
+            --text-heading: #f8fafc;
+            --text-body: #94a3b8;
+            --text-muted: #64748b;
+            --panel-bg: rgba(6, 12, 28, 0.88);
+            --panel-border: rgba(255, 223, 112, 0.22);
+            --panel-glow: rgba(255, 223, 112, 0.15);
+        }
+
+        body {
+            background-color: var(--space-bg);
+            color: var(--text-body);
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            overflow: hidden;
+            width: 100vw;
+            height: 100vh;
+            user-select: none;
+        }
+
+        /* 3D WebGL Canvas Layer */
+        #space-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1;
+            outline: none;
+            cursor: grab;
+        }
+
+        #space-canvas:active {
+            cursor: grabbing;
+        }
+
+        /* Ambient Cosmic Vignette */
+        .cosmic-vignette {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 2;
+            background: radial-gradient(circle at center, transparent 45%, rgba(2, 6, 18, 0.75) 100%);
+        }
+
+        /* ============================================================
+           TOP NAVIGATION BAR (GLASSMORPHIC SPACE COCKPIT)
+           ============================================================ */
+        .space-navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 68px;
+            padding: 0 28px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 40;
+            background: rgba(3, 7, 18, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(255, 223, 112, 0.2);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .brand-cluster {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .brand-badge {
+            width: 38px;
+            height: 38px;
+            background: linear-gradient(135deg, #ffd700 0%, #b8860b 100%);
+            border-radius: 10px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #040818;
+            font-size: 20px;
+            font-weight: 800;
+            box-shadow: 0 0 16px rgba(255, 215, 0, 0.4);
+        }
+
+        .brand-title {
+            color: var(--text-heading);
+            font-size: 17px;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+        }
+
+        .brand-title span {
+            color: var(--accent-gold);
+            font-weight: 800;
+        }
+
+        .brand-sub {
+            font-size: 11.5px;
+            color: var(--text-muted);
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            font-family: 'Share Tech Mono', monospace;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
+            color: #e2e8f0;
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.25s ease;
+            cursor: pointer;
+            backdrop-filter: blur(8px);
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 223, 112, 0.15);
+            border-color: var(--accent-gold);
+            color: var(--accent-gold);
+            transform: translateY(-1px);
+            box-shadow: 0 0 15px rgba(255, 223, 112, 0.25);
+        }
+
+        .nav-btn.primary {
+            background: linear-gradient(135deg, #ffd700 0%, #c5911e 100%);
+            color: #040818;
+            border-color: #ffd700;
+            font-weight: 700;
+            box-shadow: 0 2px 14px rgba(255, 215, 0, 0.35);
+        }
+
+        .nav-btn.primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(255, 215, 0, 0.6);
+            color: #000000;
+        }
+
+        /* ============================================================
+           HUD INSTRUCTION / HINT BADGE (TOP-LEFT)
+           ============================================================ */
+        .hud-hint-pill {
+            position: fixed;
+            top: 86px;
+            left: 28px;
+            z-index: 30;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 18px;
+            background: rgba(3, 7, 18, 0.72);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 30px;
+            backdrop-filter: blur(12px);
+            font-size: 12.5px;
+            color: #cbd5e1;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+            pointer-events: none;
+            animation: fadeInHint 1s ease-out;
+        }
+
+        .hud-hint-pill i {
+            color: var(--accent-gold);
+            font-size: 16px;
+            animation: pulseIcon 2s infinite;
+        }
+
+        @keyframes pulseIcon {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.2); opacity: 0.8; }
+        }
+
+        @keyframes fadeInHint {
+            0% { opacity: 0; transform: translateY(-10px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ============================================================
+           BOTTOM CELESTIAL CONTROLS BAR (PLANET DOCK)
+           ============================================================ */
+        /* ============================================================
+           BOTTOM CELESTIAL CONTROLS BAR (MODERN SPACE DOCK)
+           ============================================================ */
+        .dock-wrapper {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 45;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            max-width: calc(100vw - 32px);
+            padding: 0 4px;
+        }
+
+        .dock-nav-arrow {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: rgba(6, 12, 32, 0.88);
+            border: 1px solid rgba(255, 223, 112, 0.35);
+            color: #ffd700;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.65), 0 0 16px rgba(255, 223, 112, 0.15);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            flex-shrink: 0;
+            user-select: none;
+        }
+
+        .dock-nav-arrow:hover {
+            background: #ffd700;
+            color: #040818;
+            transform: scale(1.12);
+            box-shadow: 0 0 24px rgba(255, 223, 112, 0.7);
+        }
+
+        .dock-nav-arrow:active {
+            transform: scale(0.95);
+        }
+
+        .planet-dock {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 14px;
+            background: rgba(5, 11, 28, 0.86);
+            border: 1px solid rgba(255, 223, 112, 0.28);
+            border-radius: 46px;
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            box-shadow: 0 16px 50px rgba(0, 0, 0, 0.85), 0 0 32px rgba(255, 223, 112, 0.15);
+            overflow-x: auto;
+            overflow-y: hidden;
+            scroll-behavior: smooth;
+            cursor: grab;
+            user-select: none;
+            -webkit-user-select: none;
+            max-width: min(880px, calc(100vw - 120px));
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255, 223, 112, 0.45) transparent;
+            position: relative;
+        }
+
+        .planet-dock.grabbing {
+            cursor: grabbing;
+        }
+
+        .planet-dock::-webkit-scrollbar {
+            height: 4px;
+        }
+
+        .planet-dock::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+            margin: 0 20px;
+        }
+
+        .planet-dock::-webkit-scrollbar-thumb {
+            background: linear-gradient(90deg, #f97316, #10b981, #38bdf8, #a855f7, #ffd700);
+            border-radius: 4px;
+            box-shadow: 0 0 8px rgba(255, 223, 112, 0.5);
+        }
+
+        .planet-tab-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 6px 16px 6px 8px;
+            border-radius: 36px;
+            background: rgba(255, 255, 255, 0.035);
+            border: 1px solid rgba(255, 255, 255, 0.09);
+            color: #94a3b8;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        .planet-tab-orb {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 35% 35%, #ffffff 0%, var(--orb-color) 60%, #000000 100%);
+            box-shadow: 0 0 14px var(--orb-glow);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Share Tech Mono', monospace;
+            font-weight: 800;
+            font-size: 13px;
+            color: #040818;
+            flex-shrink: 0;
+            transition: transform 0.25s ease;
+        }
+
+        .planet-tab-orb i {
+            font-size: 16px;
+            color: #040818;
+        }
+
+        .planet-tab-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            text-align: left;
+        }
+
+        .planet-tab-name {
+            font-size: 13px;
+            font-weight: 700;
+            color: #f1f5f9;
+            line-height: 1.25;
+            transition: color 0.2s ease;
+        }
+
+        .planet-tab-tag, .planet-tab-progress {
+            font-size: 10.5px;
+            font-family: 'Share Tech Mono', monospace;
+            color: #94a3b8;
+            letter-spacing: 0.3px;
+        }
+
+        .planet-tab-btn:hover {
+            background: rgba(255, 255, 255, 0.09);
+            color: #ffffff;
+            border-color: rgba(255, 255, 255, 0.35);
+            transform: translateY(-3px) scale(1.03);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.55);
+        }
+
+        .planet-tab-btn:hover .planet-tab-orb {
+            transform: scale(1.15) rotate(15deg);
+        }
+
+        .planet-tab-btn.active {
+            background: rgba(255, 223, 112, 0.16);
+            border-color: var(--accent-gold);
+            color: #ffffff;
+            box-shadow: 0 0 24px rgba(255, 223, 112, 0.38);
+            transform: translateY(-2px);
+        }
+
+        .planet-tab-btn.active .planet-tab-name {
+            color: var(--accent-gold);
+        }
+
+        /* Quick Controls (Speed / Reset Orbit) */
+        .dock-divider {
+            width: 1px;
+            height: 28px;
+            background: rgba(255, 255, 255, 0.18);
+            margin: 0 4px;
+            flex-shrink: 0;
+        }
+
+        .orbit-ctrl-btn {
+            height: 40px;
+            padding: 0 12px;
+            border-radius: 22px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            color: #cbd5e1;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            font-size: 15px;
+            font-family: 'Share Tech Mono', monospace;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .orbit-ctrl-btn .ctrl-subtext {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .orbit-ctrl-btn:hover {
+            background: var(--accent-gold);
+            color: #040818;
+            box-shadow: 0 0 18px rgba(255, 223, 112, 0.55);
+            transform: translateY(-2px);
+        }
+
+        /* ============================================================
+           FIXED RIGHT-SIDE GOAL CARD (SLIDES IN SMOOTHLY, NO MOUSE FOLLOW)
+           ============================================================ */
+        .side-goal-card {
+            position: fixed;
+            top: 84px;
+            right: 28px;
+            width: 460px;
+            max-width: calc(100vw - 40px);
+            height: calc(100vh - 110px);
+            z-index: 50;
+            background: var(--panel-bg);
+            border: 1px solid var(--panel-border);
+            border-radius: 24px;
+            backdrop-filter: blur(28px);
+            -webkit-backdrop-filter: blur(28px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), 0 0 35px var(--panel-glow);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transform: translateX(calc(100% + 40px));
+            opacity: 0;
+            pointer-events: none;
+            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), 
+                        opacity 0.4s ease, 
+                        border-color 0.4s ease, 
+                        box-shadow 0.4s ease;
+        }
+
+        .side-goal-card.open {
+            transform: translateX(0);
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* Card Header */
+        .card-header-banner {
+            position: relative;
+            padding: 24px 24px 18px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.04) 0%, transparent 100%);
+        }
+
+        .card-close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #cbd5e1;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .card-close-btn:hover {
+            background: #ef4444;
+            color: #ffffff;
+            border-color: #ef4444;
+            transform: rotate(90deg);
+            box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
+        }
+
+        .card-category-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11.5px;
+            font-weight: 700;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            font-family: 'Share Tech Mono', monospace;
+            border: 1px solid currentColor;
+        }
+
+        .card-title {
+            color: #ffffff;
+            font-size: 24px;
+            font-weight: 800;
+            line-height: 1.25;
+            letter-spacing: -0.4px;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-subtitle {
+            font-size: 13.5px;
+            color: #94a3b8;
+            line-height: 1.5;
+        }
+
+        /* Card Scrollable Content */
+        .card-body {
+            flex: 1;
+            padding: 22px 24px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .card-body::-webkit-scrollbar {
+            width: 5px;
+        }
+        .card-body::-webkit-scrollbar-thumb {
+            background: rgba(255, 223, 112, 0.3);
+            border-radius: 4px;
+        }
+
+        /* Progress Meter */
+        .progress-box {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 16px;
+        }
+
+        .progress-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12.5px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #cbd5e1;
+        }
+
+        .progress-meta span:last-child {
+            color: var(--accent-gold);
+            font-family: 'Share Tech Mono', monospace;
+        }
+
+        .progress-bar-track {
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 0 12px currentColor;
+        }
+
+        /* Info Section Blocks */
+        .info-block {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .info-block h4 {
+            color: #f1f5f9;
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Share Tech Mono', monospace;
+        }
+
+        .info-block p {
+            font-size: 14px;
+            line-height: 1.65;
+            color: #94a3b8;
+        }
+
+        /* Tags Cluster */
+        .tags-cluster {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+        }
+
+        .tag-chip {
+            padding: 4px 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            font-size: 11.5px;
+            color: #cbd5e1;
+        }
+
+        /* Action Footer */
+        .card-footer {
+            padding: 16px 24px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(0, 0, 0, 0.25);
+            display: flex;
+            gap: 12px;
+        }
+
+        .launch-game-btn {
+            flex: 1;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 13px 20px;
+            border-radius: 14px;
+            font-size: 14.5px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            text-decoration: none;
+            border: none;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .launch-game-btn:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.15);
+        }
+
+        /* ============================================================
+           INTERACTIVE MINIGAME MODAL OVERLAY
+           ============================================================ */
+        .minigame-modal-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 999;
+            background: rgba(2, 6, 20, 0.88);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .minigame-modal-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .minigame-container {
+            width: 760px;
+            max-width: 100%;
+            max-height: 90vh;
+            background: #060d24;
+            border: 1px solid rgba(255, 223, 112, 0.3);
+            border-radius: 24px;
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.9), 0 0 40px rgba(255, 223, 112, 0.2);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            animation: modalScaleUp 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes modalScaleUp {
+            0% { transform: scale(0.92); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .minigame-header {
+            padding: 18px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .minigame-title {
+            color: #ffffff;
+            font-size: 19px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .minigame-close-btn {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #cbd5e1;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 18px;
+            transition: all 0.2s ease;
+        }
+
+        .minigame-close-btn:hover {
+            background: #ef4444;
+            color: #ffffff;
+            border-color: #ef4444;
+        }
+
+        .minigame-viewport {
+            padding: 24px;
+            overflow-y: auto;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* ============================================================
+           RUNNER GAME STYLES (PHYSICAL ACTIVITY)
+           ============================================================ */
+        #runner-canvas {
+            background: #020617;
+            border: 2px solid #f97316;
+            border-radius: 16px;
+            box-shadow: 0 0 25px rgba(249, 115, 22, 0.3);
+            max-width: 100%;
+        }
+
+        .runner-controls-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 680px;
+            margin-top: 16px;
+            padding: 12px 18px;
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .runner-hud-stat {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 14px;
+            color: #f97316;
+        }
+
+        .runner-jump-btn {
+            padding: 10px 24px;
+            background: #f97316;
+            color: #ffffff;
+            border: none;
+            border-radius: 12px;
+            font-weight: 800;
+            cursor: pointer;
+            font-size: 14px;
+            box-shadow: 0 4px 15px rgba(249, 115, 22, 0.4);
+            transition: all 0.2s ease;
+        }
+
+        .runner-jump-btn:active {
+            transform: scale(0.96);
+        }
+
+        /* ============================================================
+           HIKING BUCKET LIST STYLES (PHILIPPINE TOP 5 PEAKS)
+           ============================================================ */
+        .hiking-list-wrapper {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .hike-peak-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 16px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.25s ease;
+        }
+
+        .hike-peak-card.completed {
+            background: rgba(16, 185, 129, 0.08);
+            border-color: rgba(16, 185, 129, 0.45);
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.15);
+        }
+
+        .hike-peak-card:hover {
+            border-color: var(--accent-gold);
+            transform: translateY(-2px);
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .peak-main {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .peak-rank {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 15px;
+            font-family: 'Share Tech Mono', monospace;
+            background: rgba(255, 255, 255, 0.08);
+            color: #cbd5e1;
+        }
+
+        .hike-peak-card.completed .peak-rank {
+            background: #10b981;
+            color: #041810;
+            box-shadow: 0 0 14px rgba(16, 185, 129, 0.5);
+        }
+
+        .peak-info h4 {
+            color: #ffffff;
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 3px;
+        }
+
+        .peak-info p {
+            font-size: 12.5px;
+            color: #94a3b8;
+        }
+
+        .peak-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-family: 'Share Tech Mono', monospace;
+        }
+
+        .peak-badge.done {
+            background: rgba(16, 185, 129, 0.2);
+            color: #34d399;
+            border: 1px solid #10b981;
+        }
+
+        .peak-badge.soon {
+            background: rgba(56, 189, 248, 0.2);
+            color: #38bdf8;
+            border: 1px solid #38bdf8;
+            box-shadow: 0 0 12px rgba(56, 189, 248, 0.35);
+        }
+
+        .peak-badge.pending {
+            background: rgba(234, 179, 8, 0.15);
+            color: #facc15;
+            border: 1px solid rgba(234, 179, 8, 0.4);
+        }
+
+        /* ============================================================
+           ORGANIZATION / TASK MATRIX STYLES
+           ============================================================ */
+        .task-grid-container {
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .task-quadrant {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 14px;
+            padding: 14px;
+        }
+
+        .quadrant-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: #cbd5e1;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-family: 'Share Tech Mono', monospace;
+        }
+
+        .task-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px;
+            background: rgba(0, 0, 0, 0.25);
+            border-radius: 8px;
+            font-size: 12.5px;
+            color: #cbd5e1;
+            margin-bottom: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .task-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .task-item.checked {
+            text-decoration: line-through;
+            opacity: 0.5;
+        }
+
+        /* Piano Keyboard */
+        .piano-keys {
+            display: flex;
+            position: relative;
+            background: #111;
+            padding: 12px;
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+        }
+
+        .piano-white-key {
+            width: 52px;
+            height: 180px;
+            background: linear-gradient(180deg, #f8fafc 0%, #cbd5e1 100%);
+            border: 1px solid #94a3b8;
+            border-radius: 0 0 8px 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            padding-bottom: 12px;
+            color: #0f172a;
+            font-weight: 700;
+            font-size: 13px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            transition: transform 0.05s ease, background 0.1s ease;
+        }
+
+        .piano-white-key:active, .piano-white-key.pressed {
+            background: #ffdf70;
+            transform: translateY(4px);
+        }
+
+        .piano-black-key {
+            width: 32px;
+            height: 110px;
+            background: linear-gradient(180deg, #334155 0%, #090d16 100%);
+            border: 1px solid #000;
+            border-radius: 0 0 6px 6px;
+            cursor: pointer;
+            margin-left: -16px;
+            margin-right: -16px;
+            z-index: 2;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            padding-bottom: 8px;
+            color: #e2e8f0;
+            font-size: 11px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.7);
+            transition: transform 0.05s ease, background 0.1s ease;
+        }
+
+        .piano-black-key:active, .piano-black-key.pressed {
+            background: #a855f7;
+            transform: translateY(3px);
+        }
+
+        /* Code Challenge Styles */
+        .code-challenge-box {
+            width: 100%;
+            background: #030712;
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            border-radius: 14px;
+            padding: 18px;
+            font-family: 'Fira Code', monospace;
+            font-size: 13px;
+            color: #38bdf8;
+            line-height: 1.6;
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8);
+        }
+
+        /* Responsive Mobile Styles */
+        @media (max-width: 900px) {
+            .side-goal-card {
+                width: calc(100vw - 32px);
+                right: 16px;
+                top: 76px;
+                height: calc(100vh - 160px);
+            }
+            .space-navbar {
+                padding: 0 16px;
+            }
+            .hud-hint-pill {
+                left: 16px;
+                top: 78px;
+            }
+            .task-grid-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ============================================================
+           2026 POLISH LAYER — entrance choreography & card motion
+           ============================================================ */
+        :root {
+            --g-ease: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        ::selection {
+            background: rgba(255, 223, 112, 0.28);
+            color: #ffffff;
+        }
+
+        ::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, rgba(255, 223, 112, 0.55), rgba(255, 223, 112, 0.2));
+            border-radius: 99px;
+            border: 2px solid transparent;
+            background-clip: content-box;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(180deg, #ffdf70, #c59b27);
+            background-clip: content-box;
+        }
+
+        .navbar,
+        .space-navbar {
+            animation: navDropIn 0.9s var(--g-ease) both;
+        }
+
+        @keyframes navDropIn {
+            from { opacity: 0; transform: translateY(-100%); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .dock-wrapper {
+            animation: dockRise 1s 0.35s var(--g-ease) both;
+        }
+
+        @keyframes dockRise {
+            from { opacity: 0; transform: translate(-50%, 36px) scale(0.97); }
+            to { opacity: 1; transform: translate(-50%, 0) scale(1); }
+        }
+
+        .hud-hint-pill {
+            animation-delay: 0.8s;
+            animation-fill-mode: both;
+        }
+
+        .brand-badge {
+            position: relative;
+            transition: transform 0.4s var(--g-ease), box-shadow 0.4s ease;
+        }
+
+        .brand-badge::after {
+            content: "";
+            position: absolute;
+            inset: -6px;
+            border-radius: 14px;
+            border: 1px solid rgba(255, 215, 0, 0.4);
+            pointer-events: none;
+            animation: brandHalo 3.8s ease-in-out infinite;
+        }
+
+        @keyframes brandHalo {
+            0%, 100% { opacity: 0.2; transform: scale(0.94); }
+            50% { opacity: 0.75; transform: scale(1.06); }
+        }
+
+        .brand-cluster:hover .brand-badge {
+            transform: rotate(-8deg) scale(1.05);
+            box-shadow: 0 0 26px rgba(255, 215, 0, 0.6);
+        }
+
+        .brand-title span {
+            background: linear-gradient(90deg, #ffdf70 0%, #fff8d6 45%, #ffdf70 100%);
+            background-size: 220% 100%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: brandShimmer 8s linear infinite;
+        }
+
+        @keyframes brandShimmer {
+            to { background-position: -220% 0; }
+        }
+
+        /* Card content choreography */
+        .side-goal-card .card-body > * {
+            opacity: 0;
+            transform: translateY(16px);
+            transition: opacity 0.5s ease, transform 0.6s var(--g-ease);
+        }
+
+        .side-goal-card.open .card-body > * {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .side-goal-card .card-body > *:nth-child(1) { transition-delay: 0.06s; }
+        .side-goal-card .card-body > *:nth-child(2) { transition-delay: 0.12s; }
+        .side-goal-card .card-body > *:nth-child(3) { transition-delay: 0.18s; }
+        .side-goal-card .card-body > *:nth-child(4) { transition-delay: 0.24s; }
+        .side-goal-card .card-body > *:nth-child(5) { transition-delay: 0.3s; }
+
+        .side-goal-card .card-footer {
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.5s ease, transform 0.6s var(--g-ease);
+        }
+
+        .side-goal-card.open .card-footer {
+            opacity: 1;
+            transform: translateY(0);
+            transition-delay: 0.28s;
+        }
+
+        /* Soft fade at the bottom of the scrollable card body */
+        .card-body {
+            -webkit-mask-image: linear-gradient(to bottom, #000 0, #000 calc(100% - 26px), transparent 100%);
+            mask-image: linear-gradient(to bottom, #000 0, #000 calc(100% - 26px), transparent 100%);
+        }
+
+        .card-header-banner::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 223, 112, 0.65), transparent);
+            opacity: 0.75;
+            pointer-events: none;
+        }
+
+        .progress-bar-fill {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.45), transparent);
+            transform: translateX(-110%);
+            pointer-events: none;
+            animation: barSheen 2.8s 0.4s ease-in-out infinite;
+        }
+
+        @keyframes barSheen {
+            0% { transform: translateX(-110%); }
+            55%, 100% { transform: translateX(130%); }
+        }
+
+        /* Milestones & tags arrive one after another */
+        #card-milestones-list > div {
+            animation: milestoneIn 0.5s var(--g-ease) both;
+        }
+
+        #card-milestones-list > div:nth-child(1) { animation-delay: 0.16s; }
+        #card-milestones-list > div:nth-child(2) { animation-delay: 0.23s; }
+        #card-milestones-list > div:nth-child(3) { animation-delay: 0.3s; }
+        #card-milestones-list > div:nth-child(4) { animation-delay: 0.37s; }
+        #card-milestones-list > div:nth-child(5) { animation-delay: 0.44s; }
+
+        @keyframes milestoneIn {
+            from { opacity: 0; transform: translateX(-10px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .tag-chip {
+            animation: tagFadeIn 0.45s var(--g-ease) backwards;
+            transition: border-color 0.25s ease, background 0.25s ease, transform 0.25s ease;
+        }
+
+        .tag-chip:nth-child(1) { animation-delay: 0.3s; }
+        .tag-chip:nth-child(2) { animation-delay: 0.36s; }
+        .tag-chip:nth-child(3) { animation-delay: 0.42s; }
+        .tag-chip:nth-child(4) { animation-delay: 0.48s; }
+        .tag-chip:nth-child(5) { animation-delay: 0.54s; }
+
+        .tag-chip:hover {
+            background: rgba(255, 223, 112, 0.12);
+            border-color: rgba(255, 223, 112, 0.45);
+            transform: translateY(-2px);
+        }
+
+        @keyframes tagFadeIn {
+            from { opacity: 0; transform: translateY(6px) scale(0.96); }
+            to { opacity: 1; transform: none; }
+        }
+
+        /* Active celestial body gently breathes */
+        .planet-tab-btn.active .planet-tab-orb {
+            animation: orbPulse 2.6s ease-in-out infinite;
+        }
+
+        @keyframes orbPulse {
+            0%, 100% { box-shadow: 0 0 14px var(--orb-glow); }
+            50% { box-shadow: 0 0 22px var(--orb-glow), 0 0 0 5px rgba(255, 255, 255, 0.05); }
+        }
+
+        .planet-tab-btn.active {
+            box-shadow: 0 0 26px rgba(255, 223, 112, 0.42), 0 10px 26px rgba(0, 0, 0, 0.55);
+        }
+
+        /* Minigame modal entrance */
+        .minigame-modal-overlay.active .minigame-container {
+            animation: modalScaleUp 0.4s var(--g-ease) both;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .navbar,
+            .space-navbar,
+            .dock-wrapper,
+            .brand-badge::after,
+            .brand-title span,
+            .progress-bar-fill::after,
+            .planet-tab-btn.active .planet-tab-orb {
+                animation: none !important;
+            }
+
+            .side-goal-card .card-body > *,
+            .side-goal-card .card-footer {
+                opacity: 1;
+                transform: none;
+                transition: none;
+            }
+
+            #card-milestones-list > div,
+            .tag-chip {
+                animation: none !important;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+    <!-- 3D WEBGL SOLAR SYSTEM CANVAS -->
+    <canvas id="space-canvas"></canvas>
+    <div class="cosmic-vignette"></div>
+
+    <!-- COCKPIT NAVBAR -->
+    <nav class="space-navbar">
+        <div class="brand-cluster">
+            <div class="brand-badge">
+                <i class='bx bx-planet'></i>
+            </div>
+            <div>
+                <div class="brand-title">Ruel C. Momo Jr. <span>Goals & Solar System</span></div>
+            </div>
+        </div>
+
+        <div class="nav-actions">
+            <a href="Ruel C. Momo PT 2.html" class="nav-btn">
+                <i class='bx bx-left-arrow-alt'></i> Portfolio
+            </a>
+            <a href="project.html" class="nav-btn">
+                <i class='bx bx-briefcase-alt-2'></i> Projects
+            </a>
+            <a href="hobbies.html" class="nav-btn">
+                <i class='bx bx-music'></i> Hobbies
+            </a>
+            <button type="button" class="nav-btn primary" onclick="resetOrbitView()" title="Reset Camera View">
+                <i class='bx bx-reset'></i> Reset Orbit
+            </button>
+        </div>
+    </nav>
+
+    <!-- FLOATING HUD HINT -->
+    <div class="hud-hint-pill">
+        <i class='bx bx-mouse'></i>
+        <span>Drag to rotate 3D orbit • Scroll to zoom • Click any celestial body or dock below</span>
+    </div>
+
+    <!-- BOTTOM PLANET DOCK (MODERN SPACE DOCK WITH ARROWS & SCROLL) -->
+    <div class="dock-wrapper" id="dock-wrapper">
+        <button type="button" class="dock-nav-arrow left" id="dock-scroll-left" title="Scroll Left">
+            <i class='bx bx-chevron-left'></i>
+        </button>
+
+        <div class="planet-dock" id="planet-dock-track">
+            <button type="button" class="planet-tab-btn" onclick="selectCelestialBody('core')" id="tab-core" data-id="core">
+                <span class="planet-tab-orb" style="--orb-color:#ffd700; --orb-glow:rgba(255,215,0,0.65);">
+                    <i class='bx bx-sun'></i>
+                </span>
+                <div class="planet-tab-info">
+                    <span class="planet-tab-name">Vision Core</span>
+                    <span class="planet-tab-tag">Sun • North Star</span>
+                </div>
+            </button>
+
+            <div class="dock-divider"></div>
+
+            <button type="button" class="planet-tab-btn" onclick="selectCelestialBody('fitness')" id="tab-fitness" data-id="fitness">
+                <span class="planet-tab-orb" style="--orb-color:#f97316; --orb-glow:rgba(249,115,22,0.65);">
+                    <span>1</span>
+                </span>
+                <div class="planet-tab-info">
+                    <span class="planet-tab-name">Physical Activity</span>
+                    <span class="planet-tab-progress" style="color:#f97316;">92% Completed</span>
+                </div>
+            </button>
+
+            <button type="button" class="planet-tab-btn" onclick="selectCelestialBody('hiking')" id="tab-hiking" data-id="hiking">
+                <span class="planet-tab-orb" style="--orb-color:#10b981; --orb-glow:rgba(16,185,129,0.65);">
+                    <span>2</span>
+                </span>
+                <div class="planet-tab-info">
+                    <span class="planet-tab-name">Continue Hiking</span>
+                    <span class="planet-tab-progress" style="color:#10b981;">Mt. Apo Conquered 🏆</span>
+                </div>
+            </button>
+
+            <button type="button" class="planet-tab-btn" onclick="selectCelestialBody('coding')" id="tab-coding" data-id="coding">
+                <span class="planet-tab-orb" style="--orb-color:#38bdf8; --orb-glow:rgba(56,189,248,0.65);">
+                    <span>3</span>
+                </span>
+                <div class="planet-tab-info">
+                    <span class="planet-tab-name">Better Coding</span>
+                    <span class="planet-tab-progress" style="color:#38bdf8;">85% In Progress</span>
+                </div>
+            </button>
+
+            <button type="button" class="planet-tab-btn" onclick="selectCelestialBody('research')" id="tab-research" data-id="research">
+                <span class="planet-tab-orb" style="--orb-color:#06b6d4; --orb-glow:rgba(6,182,212,0.65);">
+                    <span>4</span>
+                </span>
+                <div class="planet-tab-info">
+                    <span class="planet-tab-name">Research (SIP)</span>
+                    <span class="planet-tab-progress" style="color:#06b6d4;">78% Hydrodynamics</span>
+                </div>
+            </button>
+
+            <button type="button" class="planet-tab-btn" onclick="selectCelestialBody('hobbies')" id="tab-hobbies" data-id="hobbies">
+                <span class="planet-tab-orb" style="--orb-color:#a855f7; --orb-glow:rgba(168,85,247,0.65);">
+                    <span>5</span>
+                </span>
+                <div class="planet-tab-info">
+                    <span class="planet-tab-name">Piano & Chess</span>
+                    <span class="planet-tab-progress" style="color:#a855f7;">82% Practice</span>
+                </div>
+            </button>
+
+            <button type="button" class="planet-tab-btn" onclick="selectCelestialBody('organize')" id="tab-organize" data-id="organize">
+                <span class="planet-tab-orb" style="--orb-color:#eab308; --orb-glow:rgba(234,179,8,0.65);">
+                    <span>6</span>
+                </span>
+                <div class="planet-tab-info">
+                    <span class="planet-tab-name">My Faith</span>
+                    <span class="planet-tab-progress" style="color:#eab308;">72% Mastery</span>
+                </div>
+            </button>
+
+            <button type="button" class="planet-tab-btn" onclick="selectCelestialBody('comet')" id="tab-comet" data-id="comet">
+                <span class="planet-tab-orb" style="--orb-color:#7dd3fc; --orb-glow:rgba(125,211,252,0.8);">
+                    <i class='bx bx-meteor'></i>
+                </span>
+                <div class="planet-tab-info">
+                    <span class="planet-tab-name">Comet</span>
+                    <span class="planet-tab-progress" style="color:#7dd3fc;">Dual Tails ☄️</span>
+                </div>
+            </button>
+
+            <div class="dock-divider"></div>
+
+            <button type="button" class="orbit-ctrl-btn" onclick="toggleOrbitSpeed()" id="btn-speed" title="Toggle 2.5x Orbit Speed">
+                <i class='bx bx-fast-forward'></i>
+                <span class="ctrl-subtext">Speed</span>
+            </button>
+
+            <button type="button" class="orbit-ctrl-btn" onclick="resetOrbitView()" id="btn-reset-dock" title="Overview Orbit View">
+                <i class='bx bx-expand-alt'></i>
+                <span class="ctrl-subtext">Reset</span>
+            </button>
+        </div>
+
+        <button type="button" class="dock-nav-arrow right" id="dock-scroll-right" title="Scroll Right">
+            <i class='bx bx-chevron-right'></i>
+        </button>
+    </div>
+
+    <!-- FIXED NON-FOLLOWING RIGHT-SIDE GOAL CARD -->
+    <aside class="side-goal-card" id="side-goal-card" aria-label="Goal Details">
+        <div class="card-header-banner">
+            <button type="button" class="card-close-btn" onclick="closeGoalCard()" title="Close Card">
+                <i class='bx bx-x'></i>
+            </button>
+            <div class="card-category-badge" id="card-badge">STE OBJECTIVE</div>
+            <h2 class="card-title" id="card-title">
+                <i class='bx bx-target-lock' id="card-icon"></i>
+                <span id="card-title-text">Goal Title</span>
+            </h2>
+            <p class="card-subtitle" id="card-subtitle">Secondary description of the selected goal milestone.</p>
+        </div>
+
+        <div class="card-body">
+            <!-- Progress Tracker -->
+            <div class="progress-box">
+                <div class="progress-meta">
+                    <span id="progress-status-label">Overall Completion</span>
+                    <span id="progress-percent">75%</span>
+                </div>
+                <div class="progress-bar-track">
+                    <div class="progress-bar-fill" id="progress-fill" style="width: 75%; background: #ffd700; color: #ffd700;"></div>
+                </div>
+            </div>
+
+            <!-- Detailed Overview -->
+            <div class="info-block">
+                <h4><i class='bx bx-align-left'></i> Strategic Blueprint</h4>
+                <p id="card-description">
+                    Full detailed summary of this life goal, describing how it contributes to my development in Grade 8 Schwann and long-term tech aspirations.
+                </p>
+            </div>
+
+            <!-- Key Milestones -->
+            <div class="info-block">
+                <h4><i class='bx bx-check-square'></i> Target Milestones</h4>
+                <div id="card-milestones-list" style="display:flex; flex-direction:column; gap:8px;">
+                    <!-- Injected dynamically -->
+                </div>
+            </div>
+
+            <!-- Relevant Tags -->
+            <div class="info-block">
+                <h4><i class='bx bx-purchase-tag-alt'></i> Domain Focus</h4>
+                <div class="tags-cluster" id="card-tags-cluster">
+                    <span class="tag-chip">#STEM</span>
+                    <span class="tag-chip">#Technology</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-footer">
+            <button type="button" class="launch-game-btn" id="card-action-btn" onclick="triggerCardAction()">
+                <i class='bx bx-joystick'></i> Launch Interactive Minigame
+            </button>
+        </div>
+    </aside>
+
+    <!-- MINIGAME MODAL CONTAINER -->
+    <div class="minigame-modal-overlay" id="minigame-modal">
+        <div class="minigame-container">
+            <div class="minigame-header">
+                <h3 class="minigame-title" id="modal-title">
+                    <i class='bx bx-game'></i> Minigame Title
+                </h3>
+                <button type="button" class="minigame-close-btn" onclick="closeMinigameModal()" title="Close Minigame">
+                    <i class='bx bx-x'></i>
+                </button>
+            </div>
+            <div class="minigame-viewport" id="modal-viewport">
+                <!-- Dynamically injected minigame content -->
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================
+       CELESTIAL DATA & GOAL ARCHITECTURE
+       ============================================================ -->
+    <script>
+        const GOALS_DATA = {
+            core: {
+                id: 'core',
+                title: 'Vision Core: Life North Star',
+                badge: 'System Core • Life Vision',
+                badgeColor: '#ffd700',
+                icon: 'bx-sun',
+                subtitle: 'The gravitational center of my ambitions, academic excellence, and creative passions.',
+                progress: 88,
+                progressColor: '#ffd700',
+                description: 'The Vision Core represents the unifying purpose that drives my daily routines: combining rigorous STEM scientific exploration with software engineering, athletic perseverance in mountain climbing, and creative discipline. Like a radiant sun holding 6 planetary goals in stable orbits, every project is interconnected.',
+                milestones: [
+                    { title: 'Creating a life of lasting memories', done: true },
+                    { title: 'Live with purpose and intention', done: true },
+                    { title: 'Build lasting portfolio projects that solve real-world problems', done: true },
+                    { title: 'Sleep', done: false }
+                ],
+                tags: ['#VisionCore', '#LifeArchitecture', '#Grade8Schwann', '#STEMScholar'],
+                actionText: 'Inspect System Diagnostics',
+                actionType: 'core_overview'
+            },
+
+            fitness: {
+                id: 'fitness',
+                title: 'Improved Physical Activity',
+                badge: 'Physical Conditioning • Athletics',
+                badgeColor: '#f97316',
+                icon: 'bx-run',
+                subtitle: 'Daily endurance conditioning, interval cardio, and core strength for high-altitude trekking.',
+                progress: 59,
+                progressColor: '#f97316',
+                description: 'Physical health directly powers mental clarity, focus, and coding stamina. This goal prioritizes consistent weekly running (5km targets), explosive agility drills, and cardiovascular capacity to power strenuous mountain ascents.',
+                milestones: [
+                    { title: 'Run a 5K', done: true },
+                    { title: 'Run a 10K', done: false },
+                    { title: 'Stair Work', done: true },
+                    { title: 'Participate in a trail run', done: false }
+                ],
+                tags: ['#Cardio', '#TrailRunner', '#Endurance', '#HighEnergy'],
+                actionText: 'Play Astro-Runner 🏃',
+                actionType: 'runner_game'
+            },
+
+            hiking: {
+                id: 'hiking',
+                title: 'Continue Hiking: Top 5 Peaks',
+                badge: 'Mountaineering • Trail Expedition',
+                badgeColor: '#10b981',
+                icon: 'bx-landscape',
+                subtitle: 'Summiting the highest peaks in the Philippine archipelago: Mt. Apo completed, Mt. Pulag coming soon!',
+                progress: 65,
+                progressColor: '#10b981',
+                description: 'Mountaineering teaches resilience, patience, and environmental reverence. Having already conquered the highest point in the Philippines at Mount Apo (2,954 MASL), Ruel is preparing for his next major summit: Mount Pulag (2,928m) to trek through the dwarf bamboo slopes and witness the sunrise above the Sea of Clouds.',
+                milestones: [
+                    { title: 'SUMMIT CONQUERED: Mt. Apo (2,954m) — Highest Peak in the Philippines', done: true },
+                    { title: 'SUMMIT CONQUERED: Lake Holon (1,824m) — Crown Jewel of the South', done: true },
+                    { title: 'SUMMIT CONQUERED: Bong Bato (860m) — Pulag of the South', done: true },
+                    { title: 'HOPEFULLY: Mt. Pulag (2,928m) — Sea of Clouds Sunrise', done: false },
+                    { title: 'HOPEFULLY: Mt. Dulang-Dulang (2,941m) — Trek Through the Mossy Forest', done: false }
+                ],
+                tags: ['#MtApoSummit', '#CarpeDiem', '#BucketList', '#LeaveNoTrace'],
+                actionText: 'Launch Mountain Hike Animation 🏔️',
+                actionType: 'hiking_anim'
+            },
+
+            coding: {
+                id: 'coding',
+                title: 'Better Coding & Web Development',
+                badge: 'Software Engineering • Frontend',
+                badgeColor: '#38bdf8',
+                icon: 'bx-code-alt',
+                subtitle: 'Developing strong fundamentals in HTML, CSS, Scratch game physics, TypeScript, and 3D WebGL experiences.',
+                progress: 85,
+                progressColor: '#38bdf8',
+                description: 'Turning curiosity into interactive reality. As a student developer in Grade 8 Schwann, Ruel is learning and developing semantic HTML5, modern CSS3 responsive layouts, algorithmic logic, TypeScript architectures, and 3D Three.js experiences like this planetary solar system.',
+                milestones: [
+                    { title: 'Developing HTML5 Fundamentals & Responsive CSS Layouts', done: true },
+                    { title: 'Building interactive game logic in Scratch ("Path Unlocked")', done: true },
+                    { title: 'Architecting complete responsive student portfolio experiences', done: true },
+                    { title: 'Exploring TypeScript, Three.js 3D math & Web APIs', done: false }
+                ],
+                tags: ['#WebDev', '#TypeScript', '#ThreeJS', '#FrontendDesign'],
+                actionText: 'Test Coding Logic 💻',
+                actionType: 'coding_game'
+            },
+
+            research: {
+                id: 'research',
+                title: 'Finishing Research: Tidal Turbine SIP',
+                badge: 'Scientific Research • STEM Investigatory',
+                badgeColor: '#06b6d4',
+                icon: 'bx-water',
+                subtitle: 'Designing and testing hydrodynamically modified marine turbines to harness clean ocean current energy.',
+                progress: 30,
+                progressColor: '#06b6d4',
+                description: 'My Science Investigatory Project (SIP) evaluates modified blade geometries for marine current turbines. The objective is to produce higher torque at low tidal flow velocities, offering sustainable decentralized energy for Philippine coastal communities.',
+                milestones: [
+                    { title: 'Formulate SIP Thesis & Literature Review', done: true },
+                    { title: 'Design modified hydrodynamic blade prototypes', done: false },
+                    { title: 'Conduct controlled flow-tank tests & record RPM/voltage', done: false },
+                    { title: 'Finalize Statistical Analysis & Defend Research Panel', done: false }
+                ],
+                tags: ['#TidalEnergy', '#RenewablePower', '#Hydrodynamics', '#SIPResearch'],
+                actionText: 'Launch Turbine Simulator 🌊',
+                actionType: 'research_sim'
+            },
+
+            hobbies: {
+                id: 'hobbies',
+                title: 'Improving Hobbies: Piano & Chess',
+                badge: 'Creative & Tactical Arts',
+                badgeColor: '#a855f7',
+                icon: 'bx-music',
+                subtitle: 'Expressing creative flow on the 88 keys of the piano and sharpening tactical foresight on the 64 squares of chess.',
+                progress: 82,
+                progressColor: '#a855f7',
+                description: 'Balancing creative music and tactical chess. Piano develops emotional expression, bilateral motor coordination, and deep concentration, while chess instills long-term strategic calculation.',
+                milestones: [
+                    { title: 'Daily 20-minute piano technical scale & rhythm practice', done: true },
+                    { title: 'Memorize intermediate classical & early advanced pieces', done: true },
+                    { title: 'Master complex piano compositions', done: false },
+                    { title: 'Compete in chess tournaments', done: false }
+                ],
+                tags: ['#PianoVirtuoso', '#ChessTactics', '#CreativeBalance', '#StrategicThinking'],
+                actionText: 'Play Piano Synthesizer 🎹',
+                actionType: 'piano_game'
+            },
+
+            organize: {
+                id: 'organize',
+                title: 'Closer to God',
+                badge: 'Productivity • Life Mastery',
+                badgeColor: '#eab308',
+                icon: 'bx-calendar-check',
+                subtitle: 'God First, God is Good, and Living for God. Applying his principles to achieve a life of purpose, joy, and fulfillment.',
+                progress: 72,
+                progressColor: '#eab308',
+                description: 'Discipline equals freedom. Through faith are we healed, Living for God, and applying his principles, we can achieve a life of purpose, joy, and fulfillment.',
+                milestones: [
+                    { title: 'Finish the Bible cover to cover', done: true },
+                    { title: '1 Hour of Reading the Bible daily', done: true },
+                    { title: 'Speak in Church Services', done: true },
+                    { title: 'Facilitate an Extortation', done: false }
+                ],
+                tags: ['#GodFirst', '#GodisGood', '#LiveForGod', '#HappinessInChrist'],
+                actionText: 'Open Priority Sorter 📋',
+                actionType: 'organize_game'
+            },
+
+            comet: {
+                id: 'comet',
+                title: 'Comet Momo-Schwann: Hyperbolic Wanderer',
+                badge: 'Celestial Body • Oort Cloud Comet',
+                badgeColor: '#7dd3fc',
+                icon: 'bx-meteor',
+                subtitle: 'A primordial icy & rocky celestial wanderer with active cryo-sublimation and dual dust/ion tails.',
+                progress: 100,
+                progressColor: '#7dd3fc',
+                description: 'Like an interstellar comet blazing through the cosmos, curiosity and determination power continuous forward trajectory. Composed of volatile frozen gases, silicates, and organic carbon compounds, this realistic comet features a tumbling jagged nucleus, a luminous expanding coma halo, a straight fluorescent electric-blue ion tail streaming anti-sunward with the solar wind, and a curving golden dust tail lagging along its high-eccentricity orbital track.',
+                milestones: [
+                    { title: 'Sublimating water/methane ice & active cryo-jets', done: true },
+                    { title: 'Fluorescent electric-blue Ion Tail (anti-sunward solar wind streamer)', done: true },
+                    { title: 'Curving golden Dust Tail (fanned by photon radiation pressure)', done: true },
+                    { title: 'Inclined hyperbolic orbit traversing the solar system', done: true }
+                ],
+                tags: ['#CometNucleus', '#CryoJets', '#IonTail', '#DustTail', '#DeepSpaceJourney'],
+                actionText: 'Explore Comet Telemetry ☄️',
+                actionType: 'comet_physics'
+            }
+        };
+    </script>
+
+    <!-- ============================================================
+       THREE.JS SOLAR SYSTEM 3D ENGINE
+       ============================================================ -->
+    <script>
+        let scene, camera, renderer, controls;
+        let starField, sunCore, sunCorona;
+        const celestialBodies = {};
+        const orbitRings = [];
+        let raycaster, mouse;
+        let selectedBodyId = null;
+        let orbitSpeedMultiplier = 1.0;
+        let mouseX = 0, mouseY = 0;
+        let asteroidBeltGroup, cometGroup, planetBeaconRing;
+
+        // Realistic Comet Components
+        let cometNucleusMesh, cometFrostMesh, cometComaSprite, cometOuterHazeSprite, cometIonTailPoints, cometDustTailPoints;
+        let cometTrailHistory = [];
+        const COMET_HISTORY_MAX = 70;
+
+        // Dynamic Camera & Planet Tracking (Allows uninhibited dragging and zoom!)
+        let trackedPlanet = null;
+        const lastTrackedWorldPos = new THREE.Vector3();
+        let isTransitioningToPlanet = false;
+        let transitionProgress = 0;
+        const transitionStartCam = new THREE.Vector3();
+        const transitionStartTarget = new THREE.Vector3();
+        let isResettingOverview = false;
+
+        // Helper: Procedural smooth radial glow texture for realistic vapor/dust particles
+        function createRadialCanvasTexture(innerColor, midColor, outerColor) {
+            const canvas = document.createElement('canvas');
+            canvas.width = 64;
+            canvas.height = 64;
+            const ctx = canvas.getContext('2d');
+            const grad = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
+            grad.addColorStop(0, innerColor);
+            grad.addColorStop(0.3, midColor);
+            grad.addColorStop(0.7, outerColor);
+            grad.addColorStop(1, 'rgba(0,0,0,0)');
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, 64, 64);
+            const tex = new THREE.CanvasTexture(canvas);
+            tex.generateMipmaps = false;
+            tex.minFilter = THREE.LinearFilter;
+            return tex;
+        }
+
+        // Slowed down by ~3.5x for majestic, smooth planetary revolution
+        const CELESTIAL_CONFIG = [
+            { id: 'fitness', name: 'Physical Activity', color: 0xf97316, emissive: 0x7c2d12, radius: 2.2, distance: 22, speed: 0.0048, ringColor: 0xf97316 },
+            { id: 'hiking', name: 'Continue Hiking', color: 0x10b981, emissive: 0x064e3b, radius: 2.8, distance: 34, speed: 0.0036, ringColor: 0x10b981, hasRings: true },
+            { id: 'coding', name: 'Better Coding', color: 0x38bdf8, emissive: 0x075985, radius: 2.5, distance: 46, speed: 0.0028, ringColor: 0x38bdf8, hasMoon: true },
+            { id: 'research', name: 'Research SIP', color: 0x06b6d4, emissive: 0x164e63, radius: 2.4, distance: 58, speed: 0.0021, ringColor: 0x06b6d4 },
+            { id: 'hobbies', name: 'Piano & Chess', color: 0xa855f7, emissive: 0x581c87, radius: 3.2, distance: 74, speed: 0.0016, ringColor: 0xa855f7, hasRings: true },
+            { id: 'organize', name: 'Organized Life', color: 0xeab308, emissive: 0x713f12, radius: 2.6, distance: 88, speed: 0.0012, ringColor: 0xeab308 }
+        ];
+
+        function init3DSpace() {
+            const canvas = document.getElementById('space-canvas');
+            scene = new THREE.Scene();
+            scene.fog = new THREE.FogExp2(0x030712, 0.0035);
+
+            camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1500);
+            camera.position.set(0, 55, 100);
+
+            renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true, powerPreference: 'high-performance' });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+            controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.08;
+            controls.rotateSpeed = 0.85;
+            controls.zoomSpeed = 1.25;
+            controls.minDistance = 3.5;
+            controls.maxDistance = 350;
+            controls.maxPolarAngle = Math.PI - 0.05; // Full 360 vertical viewing
+            controls.minPolarAngle = 0.05;
+
+            // When user starts dragging or zooming, cancel automated camera lerping so they have immediate full tactile control!
+            controls.addEventListener('start', () => {
+                isTransitioningToPlanet = false;
+                isResettingOverview = false;
+            });
+
+            raycaster = new THREE.Raycaster();
+            mouse = new THREE.Vector2();
+
+            // Lighting
+            const ambientLight = new THREE.AmbientLight(0x223355, 1.25);
+            scene.add(ambientLight);
+
+            const sunLight = new THREE.PointLight(0xfff3d0, 2.6, 340, 0.8);
+            scene.add(sunLight);
+
+            buildStarfield();
+            buildSunCore();
+            buildPlanets();
+            buildAsteroidBelt();
+            buildComet();
+            buildBeaconRing();
+
+            window.addEventListener('resize', onWindowResize, false);
+            window.addEventListener('mousemove', onMouseMove, false);
+            canvas.addEventListener('click', onCanvasClick, false);
+
+            initDockInteractions();
+            animate3D();
+        }
+
+        // Particle Starfield with gentle color variation
+        function buildStarfield() {
+            const starCount = 3200;
+            const starGeometry = new THREE.BufferGeometry();
+            const positions = new Float32Array(starCount * 3);
+            const colors = new Float32Array(starCount * 3);
+
+            for (let i = 0; i < starCount; i++) {
+                const r = 180 + Math.random() * 480;
+                const theta = Math.random() * Math.PI * 2;
+                const phi = Math.acos(Math.random() * 2 - 1);
+
+                positions[i * 3] = r * Math.sin(phi) * Math.cos(theta);
+                positions[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
+                positions[i * 3 + 2] = r * Math.cos(phi);
+
+                // Subtle stellar colors: Gold, Cyan, Silver, Violet
+                const tintChoice = Math.random();
+                let c = new THREE.Color(0xffffff);
+                if (tintChoice < 0.28) c = new THREE.Color(0xffdf70);
+                else if (tintChoice < 0.55) c = new THREE.Color(0x7dd3fc);
+                else if (tintChoice < 0.70) c = new THREE.Color(0xd8b4fe);
+
+                colors[i * 3] = c.r;
+                colors[i * 3 + 1] = c.g;
+                colors[i * 3 + 2] = c.b;
+            }
+
+            starGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            starGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+            const starMaterial = new THREE.PointsMaterial({
+                size: 1.5,
+                vertexColors: true,
+                transparent: true,
+                opacity: 0.88
+            });
+
+            starField = new THREE.Points(starGeometry, starMaterial);
+            scene.add(starField);
+        }
+
+        // Central Vision Sun
+        function buildSunCore() {
+            const sunGeom = new THREE.SphereGeometry(6.5, 32, 32);
+            const sunMat = new THREE.MeshBasicMaterial({
+                color: 0xffe066
+            });
+            sunCore = new THREE.Mesh(sunGeom, sunMat);
+            sunCore.userData = { id: 'core' };
+            scene.add(sunCore);
+
+            // Pulsating atmospheric glow shell
+            const coronaGeom = new THREE.SphereGeometry(8.5, 32, 32);
+            const coronaMat = new THREE.MeshBasicMaterial({
+                color: 0xffaa00,
+                transparent: true,
+                opacity: 0.28,
+                side: THREE.BackSide
+            });
+            sunCorona = new THREE.Mesh(coronaGeom, coronaMat);
+            scene.add(sunCorona);
+
+            // Wireframe subtle stellar envelope
+            const wireGeom = new THREE.IcosahedronGeometry(7.4, 2);
+            const wireMat = new THREE.MeshBasicMaterial({
+                color: 0xffd700,
+                wireframe: true,
+                transparent: true,
+                opacity: 0.2
+            });
+            const wireMesh = new THREE.Mesh(wireGeom, wireMat);
+            sunCore.add(wireMesh);
+
+            celestialBodies['core'] = sunCore;
+        }
+
+        // Procedural Planet Mesh Generator with orbital rings
+        function buildPlanets() {
+            CELESTIAL_CONFIG.forEach(cfg => {
+                // Orbital Path Ring
+                const ringCurve = new THREE.EllipseCurve(0, 0, cfg.distance, cfg.distance, 0, 2 * Math.PI, false, 0);
+                const ringPoints = ringCurve.getPoints(140);
+                const ringGeom = new THREE.BufferGeometry().setFromPoints(ringPoints.map(p => new THREE.Vector3(p.x, 0, p.y)));
+                const ringMat = new THREE.LineBasicMaterial({
+                    color: cfg.ringColor,
+                    transparent: true,
+                    opacity: 0.22
+                });
+                const orbitLine = new THREE.Line(ringGeom, ringMat);
+                scene.add(orbitLine);
+                orbitRings.push(orbitLine);
+
+                // Planet Pivot Group for clean orbital rotation
+                const pivot = new THREE.Group();
+                scene.add(pivot);
+
+                // Planet Sphere Mesh
+                const pGeom = new THREE.SphereGeometry(cfg.radius, 32, 32);
+                const pMat = new THREE.MeshStandardMaterial({
+                    color: cfg.color,
+                    emissive: cfg.emissive,
+                    emissiveIntensity: 0.45,
+                    roughness: 0.65,
+                    metalness: 0.25
+                });
+                const planet = new THREE.Mesh(pGeom, pMat);
+                planet.position.set(cfg.distance, 0, 0);
+                planet.userData = { id: cfg.id, config: cfg, pivot: pivot };
+                pivot.add(planet);
+
+                // Planetary Atmosphere Glow Shell
+                const atmoGeom = new THREE.SphereGeometry(cfg.radius * 1.25, 24, 24);
+                const atmoMat = new THREE.MeshBasicMaterial({
+                    color: cfg.color,
+                    transparent: true,
+                    opacity: 0.16,
+                    side: THREE.BackSide
+                });
+                const atmo = new THREE.Mesh(atmoGeom, atmoMat);
+                planet.add(atmo);
+
+                // Optional Planetary Rings (for Hiking & Piano/Chess)
+                if (cfg.hasRings) {
+                    const rGeom = new THREE.RingGeometry(cfg.radius * 1.45, cfg.radius * 2.2, 36);
+                    const rMat = new THREE.MeshBasicMaterial({
+                        color: cfg.color,
+                        side: THREE.DoubleSide,
+                        transparent: true,
+                        opacity: 0.45
+                    });
+                    const rMesh = new THREE.Mesh(rGeom, rMat);
+                    rMesh.rotation.x = Math.PI / 2.3;
+                    planet.add(rMesh);
+                }
+
+                // Optional Orbiting Moon (for Coding planet)
+                if (cfg.hasMoon) {
+                    const moonPivot = new THREE.Group();
+                    planet.add(moonPivot);
+                    const moonGeom = new THREE.SphereGeometry(cfg.radius * 0.28, 16, 16);
+                    const moonMat = new THREE.MeshStandardMaterial({ color: 0xe2e8f0, roughness: 0.8 });
+                    const moon = new THREE.Mesh(moonGeom, moonMat);
+                    moon.position.set(cfg.radius * 2.5, 0, 0);
+                    moonPivot.add(moon);
+                    planet.userData.moonPivot = moonPivot;
+                }
+
+                // Initial random orbital angle
+                pivot.rotation.y = Math.random() * Math.PI * 2;
+
+                celestialBodies[cfg.id] = planet;
+            });
+        }
+
+        // Realistic Asteroid Belt between Research and Hobbies
+        function buildAsteroidBelt() {
+            asteroidBeltGroup = new THREE.Group();
+            scene.add(asteroidBeltGroup);
+
+            const asteroidCount = 420;
+            const geom = new THREE.DodecahedronGeometry(0.35, 1);
+            const mat = new THREE.MeshStandardMaterial({
+                color: 0x94a3b8,
+                roughness: 0.85,
+                metalness: 0.15
+            });
+            const instancedMesh = new THREE.InstancedMesh(geom, mat, asteroidCount);
+
+            const dummy = new THREE.Object3D();
+            for (let i = 0; i < asteroidCount; i++) {
+                const angle = Math.random() * Math.PI * 2;
+                const dist = 65 + (Math.random() - 0.5) * 8;
+                const y = (Math.random() - 0.5) * 3.6;
+                const scale = 0.35 + Math.random() * 0.85;
+
+                dummy.position.set(Math.cos(angle) * dist, y, Math.sin(angle) * dist);
+                dummy.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, Math.random() * Math.PI);
+                dummy.scale.set(scale, scale, scale);
+                dummy.updateMatrix();
+
+                instancedMesh.setMatrixAt(i, dummy.matrix);
+            }
+            instancedMesh.instanceMatrix.needsUpdate = true;
+            asteroidBeltGroup.add(instancedMesh);
+        }
+
+        // REALISTIC ASTRONOMICAL CELESTIAL COMET
+        // Features: Irregular tumbling rocky/icy nucleus, active cryo-frost, soft gaseous coma, and dual tails (Ion + Dust)!
+        function buildComet() {
+            cometGroup = new THREE.Group();
+            scene.add(cometGroup);
+
+            // 1. Irregular Jagged Rocky & Icy Nucleus (Dirty Snowball style)
+            const nucleusGeom = new THREE.IcosahedronGeometry(1.25, 3);
+            const posAttr = nucleusGeom.attributes.position;
+            for (let i = 0; i < posAttr.count; i++) {
+                const vx = posAttr.getX(i);
+                const vy = posAttr.getY(i);
+                const vz = posAttr.getZ(i);
+                // Multi-frequency mathematical noise perturbation for natural boulders, craters, and ridges
+                const n1 = Math.sin(vx * 3.2) * Math.cos(vy * 3.2) * Math.sin(vz * 3.2);
+                const n2 = Math.sin(vx * 7.5 + vy * 5.2) * 0.35;
+                const perturbation = 1.0 + (n1 * 0.28 + n2 * 0.14);
+                posAttr.setXYZ(i, vx * perturbation, vy * perturbation, vz * perturbation);
+            }
+            nucleusGeom.computeVertexNormals();
+
+            // Dark silicate/carbon rocky crust with faceted flat shading
+            const nucleusMat = new THREE.MeshStandardMaterial({
+                color: 0x272b34,
+                roughness: 0.92,
+                metalness: 0.15,
+                flatShading: true
+            });
+            cometNucleusMesh = new THREE.Mesh(nucleusGeom, nucleusMat);
+            cometNucleusMesh.userData = { id: 'comet', name: 'Comet Momo-Schwann' };
+            cometGroup.add(cometNucleusMesh);
+
+            // Sublimating ice crevasses & cryo-frost wireframe layer
+            const frostMat = new THREE.MeshBasicMaterial({
+                color: 0x93c5fd,
+                wireframe: true,
+                transparent: true,
+                opacity: 0.25
+            });
+            cometFrostMesh = new THREE.Mesh(nucleusGeom.clone(), frostMat);
+            cometNucleusMesh.add(cometFrostMesh);
+
+            // 2. Soft Luminous Coma Shroud (Sublimating vapor atmosphere)
+            const comaTex = createRadialCanvasTexture('rgba(255,255,255,1)', 'rgba(125,211,252,0.85)', 'rgba(56,189,248,0.2)');
+            const comaMat = new THREE.SpriteMaterial({
+                map: comaTex,
+                color: 0xa5f3fc,
+                transparent: true,
+                opacity: 0.85,
+                blending: THREE.AdditiveBlending,
+                depthWrite: false
+            });
+            cometComaSprite = new THREE.Sprite(comaMat);
+            cometComaSprite.scale.set(6.5, 6.5, 1);
+            cometGroup.add(cometComaSprite);
+
+            // Outer diffuse coma haze
+            const outerHazeMat = new THREE.SpriteMaterial({
+                map: comaTex,
+                color: 0x38bdf8,
+                transparent: true,
+                opacity: 0.38,
+                blending: THREE.AdditiveBlending,
+                depthWrite: false
+            });
+            cometOuterHazeSprite = new THREE.Sprite(outerHazeMat);
+            cometOuterHazeSprite.scale.set(13.5, 13.5, 1);
+            cometGroup.add(cometOuterHazeSprite);
+
+            // 3. Ion Gas Tail (Type I: Straight, Fluorescent Electric-Cyan, Points Directly Away from Sun)
+            const ionPointsCount = 200;
+            const ionGeom = new THREE.BufferGeometry();
+            const ionPositions = new Float32Array(ionPointsCount * 3);
+            const ionColors = new Float32Array(ionPointsCount * 3);
+
+            for (let i = 0; i < ionPointsCount; i++) {
+                ionPositions[i * 3] = 0;
+                ionPositions[i * 3 + 1] = 0;
+                ionPositions[i * 3 + 2] = 0;
+
+                const ratio = i / ionPointsCount;
+                ionColors[i * 3] = 0.2 + (1 - ratio) * 0.7;     // R
+                ionColors[i * 3 + 1] = 0.6 + (1 - ratio) * 0.4; // G
+                ionColors[i * 3 + 2] = 1.0;                     // B
+            }
+            ionGeom.setAttribute('position', new THREE.BufferAttribute(ionPositions, 3));
+            ionGeom.setAttribute('color', new THREE.BufferAttribute(ionColors, 3));
+
+            const ionMat = new THREE.PointsMaterial({
+                size: 2.8,
+                vertexColors: true,
+                map: comaTex,
+                transparent: true,
+                opacity: 0.82,
+                blending: THREE.AdditiveBlending,
+                depthWrite: false
+            });
+            cometIonTailPoints = new THREE.Points(ionGeom, ionMat);
+            scene.add(cometIonTailPoints);
+
+            // 4. Dust Tail (Type II: Curved, Broad, Warm Golden-White, Lags Behind Orbital Trajectory)
+            const dustPointsCount = 280;
+            const dustGeom = new THREE.BufferGeometry();
+            const dustPositions = new Float32Array(dustPointsCount * 3);
+            const dustColors = new Float32Array(dustPointsCount * 3);
+
+            const dustTex = createRadialCanvasTexture('rgba(255,255,250,0.9)', 'rgba(254,240,138,0.7)', 'rgba(250,204,21,0.2)');
+            for (let i = 0; i < dustPointsCount; i++) {
+                dustPositions[i * 3] = 0;
+                dustPositions[i * 3 + 1] = 0;
+                dustPositions[i * 3 + 2] = 0;
+
+                const ratio = i / dustPointsCount;
+                dustColors[i * 3] = 1.0;
+                dustColors[i * 3 + 1] = 0.95 - ratio * 0.25;
+                dustColors[i * 3 + 2] = 0.75 - ratio * 0.45;
+            }
+            dustGeom.setAttribute('position', new THREE.BufferAttribute(dustPositions, 3));
+            dustGeom.setAttribute('color', new THREE.BufferAttribute(dustColors, 3));
+
+            const dustMat = new THREE.PointsMaterial({
+                size: 3.2,
+                vertexColors: true,
+                map: dustTex,
+                transparent: true,
+                opacity: 0.65,
+                blending: THREE.AdditiveBlending,
+                depthWrite: false
+            });
+            cometDustTailPoints = new THREE.Points(dustGeom, dustMat);
+            scene.add(cometDustTailPoints);
+        }
+
+        // Target Beacon Ring around Active Planet
+        function buildBeaconRing() {
+            const ringGeom = new THREE.RingGeometry(3.6, 4.0, 48);
+            const ringMat = new THREE.MeshBasicMaterial({
+                color: 0x38bdf8,
+                side: THREE.DoubleSide,
+                transparent: true,
+                opacity: 0.75
+            });
+            planetBeaconRing = new THREE.Mesh(ringGeom, ringMat);
+            planetBeaconRing.rotation.x = Math.PI / 2;
+            planetBeaconRing.visible = false;
+            scene.add(planetBeaconRing);
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function onMouseMove(e) {
+            mouseX = (e.clientX / window.innerWidth) * 2 - 1;
+            mouseY = -(e.clientY / window.innerHeight) * 2 + 1;
+            mouse.x = mouseX;
+            mouse.y = mouseY;
+        }
+
+        function onCanvasClick(e) {
+            mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+
+            raycaster.setFromCamera(mouse, camera);
+
+            // Check against sun core, comet nucleus, and all planets
+            const targets = [sunCore, cometNucleusMesh, ...Object.values(celestialBodies)].filter(Boolean);
+            const intersects = raycaster.intersectObjects(targets, false);
+
+            if (intersects.length > 0) {
+                const hit = intersects[0].object;
+                if (hit.userData && hit.userData.id) {
+                    selectCelestialBody(hit.userData.id);
+                }
+            }
+        }
+
+        function selectCelestialBody(id) {
+            selectedBodyId = id;
+            const data = GOALS_DATA[id];
+            if (!data) return;
+
+            // Highlight and auto-scroll active button in bottom dock
+            document.querySelectorAll('.planet-tab-btn').forEach(btn => btn.classList.remove('active'));
+            const activeTab = document.getElementById('tab-' + id);
+            if (activeTab) {
+                activeTab.classList.add('active');
+                activeTab.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+            }
+
+            // Set tracked planet object in 3D
+            const targetBody = (id === 'comet') ? cometGroup : celestialBodies[id];
+            if (targetBody) {
+                trackedPlanet = targetBody;
+                const currentPos = new THREE.Vector3();
+                targetBody.getWorldPosition(currentPos);
+                lastTrackedWorldPos.copy(currentPos);
+
+                transitionStartCam.copy(camera.position);
+                transitionStartTarget.copy(controls.target);
+                transitionProgress = 0;
+                isTransitioningToPlanet = true;
+                isResettingOverview = false;
+
+                controls.minDistance = (id === 'comet') ? 4.0 : 3.5;
+                controls.maxDistance = 140;
+            }
+
+            // Populate side card
+            const sideCard = document.getElementById('side-goal-card');
+            const badge = document.getElementById('card-badge');
+            const title = document.getElementById('card-title-text');
+            const icon = document.getElementById('card-icon');
+            const subtitle = document.getElementById('card-subtitle');
+            const desc = document.getElementById('card-description');
+            const progressFill = document.getElementById('progress-fill');
+            const progressPercent = document.getElementById('progress-percent');
+            const milestonesList = document.getElementById('card-milestones-list');
+            const tagsCluster = document.getElementById('card-tags-cluster');
+            const actionBtn = document.getElementById('card-action-btn');
+
+            badge.textContent = data.badge;
+            badge.style.color = data.badgeColor;
+            badge.style.borderColor = data.badgeColor;
+            badge.style.background = data.badgeColor + '18';
+
+            title.textContent = data.title;
+            icon.className = 'bx ' + data.icon;
+            icon.style.color = data.badgeColor;
+
+            subtitle.textContent = data.subtitle;
+            desc.textContent = data.description;
+
+            progressFill.style.width = '0%';
+            progressFill.style.background = data.progressColor;
+            progressFill.style.color = data.progressColor;
+            progressPercent.textContent = '0%';
+
+            // Milestones
+            milestonesList.innerHTML = '';
+            data.milestones.forEach(m => {
+                const row = document.createElement('div');
+                row.style.cssText = 'display:flex; align-items:flex-start; gap:10px; font-size:13.5px; line-height:1.45; color:#cbd5e1;';
+                const checkIcon = m.done ? '<i class="bx bxs-check-circle" style="color:#10b981; font-size:18px; flex-shrink:0; margin-top:2px;"></i>' 
+                                         : '<i class="bx bx-circle" style="color:#64748b; font-size:18px; flex-shrink:0; margin-top:2px;"></i>';
+                row.innerHTML = checkIcon + `<span>${m.title}</span>`;
+                milestonesList.appendChild(row);
+            });
+
+            // Tags
+            tagsCluster.innerHTML = '';
+            data.tags.forEach(t => {
+                const tagEl = document.createElement('span');
+                tagEl.className = 'tag-chip';
+                tagEl.textContent = t;
+                tagsCluster.appendChild(tagEl);
+            });
+
+            // Action button
+            actionBtn.innerHTML = `<i class='bx ${data.icon}'></i> ${data.actionText}`;
+            actionBtn.style.background = `linear-gradient(135deg, ${data.badgeColor} 0%, #1e293b 100%)`;
+            actionBtn.style.color = (id === 'core' || id === 'fitness' || id === 'organize') ? '#040818' : '#ffffff';
+
+            // Open card smoothly (fixed right side)
+            sideCard.classList.add('open');
+            sideCard.style.boxShadow = `0 20px 60px rgba(0, 0, 0, 0.8), 0 0 35px ${data.badgeColor}33`;
+            sideCard.style.borderColor = `${data.badgeColor}66`;
+
+            // Let the meter and its number count up as the card settles in.
+            requestAnimationFrame(function () {
+                requestAnimationFrame(function () {
+                    progressFill.style.width = data.progress + '%';
+                    if (typeof window.animateProgressPercent === 'function') {
+                        window.animateProgressPercent(progressPercent, data.progress, 900);
+                    } else {
+                        progressPercent.textContent = data.progress + '%';
+                    }
+                });
+            });
+
+            // Update beacon ring color to match selected planet
+            if (planetBeaconRing) {
+                planetBeaconRing.material.color.set(data.badgeColor);
+                planetBeaconRing.visible = true;
+            }
+        }
+
+        function closeGoalCard() {
+            document.getElementById('side-goal-card').classList.remove('open');
+            document.querySelectorAll('.planet-tab-btn').forEach(btn => btn.classList.remove('active'));
+            selectedBodyId = null;
+            trackedPlanet = null;
+            isResettingOverview = true;
+            if (planetBeaconRing) planetBeaconRing.visible = false;
+        }
+
+        function resetOrbitView() {
+            closeGoalCard();
+            trackedPlanet = null;
+            isTransitioningToPlanet = false;
+            isResettingOverview = true;
+            controls.minDistance = 12;
+            controls.maxDistance = 350;
+        }
+
+        function toggleOrbitSpeed() {
+            orbitSpeedMultiplier = orbitSpeedMultiplier === 1.0 ? 2.5 : 1.0;
+            const btn = document.getElementById('btn-speed');
+            btn.style.color = orbitSpeedMultiplier > 1 ? '#ffd700' : '#cbd5e1';
+        }
+
+        // Main Render Loop with Continuous Dynamic Planet Tracking and Full Orbit/Zoom Freedom
+        function animate3D() {
+            requestAnimationFrame(animate3D);
+
+            const time = performance.now() * 0.001;
+
+            // Rotate starfield slowly with subtle cursor parallax
+            if (starField) {
+                starField.rotation.y = time * 0.008 + mouseX * 0.04;
+                starField.rotation.x = mouseY * 0.02;
+            }
+
+            // Pulsate Vision Core
+            if (sunCore && sunCorona) {
+                sunCore.rotation.y += 0.003;
+                const pulse = 1 + Math.sin(time * 2) * 0.04;
+                sunCorona.scale.set(pulse, pulse, pulse);
+            }
+
+            // Rotate Asteroid Belt
+            if (asteroidBeltGroup) {
+                asteroidBeltGroup.rotation.y += 0.0015 * orbitSpeedMultiplier;
+            }
+
+            // Animate Realistic Celestial Comet
+            if (cometGroup && cometNucleusMesh) {
+                // Highly eccentric, tilted elliptical orbit
+                const a = 64; // semi-major
+                const b = 36; // semi-minor
+                const angle = time * 0.11 * orbitSpeedMultiplier;
+                const cX = Math.cos(angle) * a;
+                const cZ = Math.sin(angle) * b;
+                const cY = Math.sin(angle * 1.4) * 15; // inclined plane
+                cometGroup.position.set(cX, cY, cZ);
+
+                // Nucleus tumbling
+                cometNucleusMesh.rotation.x += 0.014;
+                cometNucleusMesh.rotation.y += 0.021;
+                cometNucleusMesh.rotation.z += 0.009;
+
+                // Pulsate coma glow
+                if (cometComaSprite) {
+                    const comaScale = 6.2 + Math.sin(time * 6) * 0.6;
+                    cometComaSprite.scale.set(comaScale, comaScale, 1);
+                }
+
+                // Record world position for tail history
+                const currentCometPos = cometGroup.position.clone();
+                cometTrailHistory.unshift(currentCometPos);
+                if (cometTrailHistory.length > COMET_HISTORY_MAX) cometTrailHistory.pop();
+
+                // 1. UPDATE ION TAIL: Points radially AWAY from Sun (0, 0, 0)
+                if (cometIonTailPoints) {
+                    const ionPositions = cometIonTailPoints.geometry.attributes.position.array;
+                    const antiSunDir = currentCometPos.clone().normalize();
+                    const tailLength = 45;
+
+                    for (let i = 0; i < ionPositions.length / 3; i++) {
+                        const dist = (i / (ionPositions.length / 3)) * tailLength;
+                        // Narrow streamer with slight turbulent jitter
+                        const jitterX = Math.sin(time * 12 + i * 0.4) * (0.15 + i * 0.02);
+                        const jitterY = Math.cos(time * 10 + i * 0.5) * (0.15 + i * 0.02);
+                        const jitterZ = Math.sin(time * 8 + i * 0.6) * (0.15 + i * 0.02);
+
+                        ionPositions[i * 3] = currentCometPos.x + antiSunDir.x * dist + jitterX;
+                        ionPositions[i * 3 + 1] = currentCometPos.y + antiSunDir.y * dist + jitterY;
+                        ionPositions[i * 3 + 2] = currentCometPos.z + antiSunDir.z * dist + jitterZ;
+                    }
+                    cometIonTailPoints.geometry.attributes.position.needsUpdate = true;
+                }
+
+                // 2. UPDATE DUST TAIL: Curves gracefully behind along orbital trajectory
+                if (cometDustTailPoints && cometTrailHistory.length > 2) {
+                    const dustPositions = cometDustTailPoints.geometry.attributes.position.array;
+                    const count = dustPositions.length / 3;
+                    const antiSunDir = currentCometPos.clone().normalize();
+
+                    for (let i = 0; i < count; i++) {
+                        const histIndex = Math.min(
+                            Math.floor((i / count) * (cometTrailHistory.length - 1)),
+                            cometTrailHistory.length - 1
+                        );
+                        const histPos = cometTrailHistory[histIndex] || currentCometPos;
+                        const spreadFactor = (i / count);
+                        // Dust tail is blown outward by radiation pressure while lagging behind
+                        const pushOut = antiSunDir.clone().multiplyScalar(spreadFactor * 6.5);
+                        const fanJitterX = (Math.sin(i * 9.2 + time * 3) - 0.5) * spreadFactor * 2.5;
+                        const fanJitterY = (Math.cos(i * 7.1 + time * 2) - 0.5) * spreadFactor * 2.0;
+                        const fanJitterZ = (Math.sin(i * 5.4 + time * 4) - 0.5) * spreadFactor * 2.5;
+
+                        dustPositions[i * 3] = histPos.x + pushOut.x + fanJitterX;
+                        dustPositions[i * 3 + 1] = histPos.y + pushOut.y + fanJitterY;
+                        dustPositions[i * 3 + 2] = histPos.z + pushOut.z + fanJitterZ;
+                    }
+                    cometDustTailPoints.geometry.attributes.position.needsUpdate = true;
+                }
+            }
+
+            // Planetary Orbital Revolutions (Slow & Majestic)
+            CELESTIAL_CONFIG.forEach(cfg => {
+                const planet = celestialBodies[cfg.id];
+                if (planet && planet.userData && planet.userData.pivot) {
+                    planet.userData.pivot.rotation.y += cfg.speed * orbitSpeedMultiplier;
+                    planet.rotation.y += 0.012;
+
+                    // Moon rotation if present
+                    if (planet.userData.moonPivot) {
+                        planet.userData.moonPivot.rotation.y += 0.03;
+                    }
+                }
+            });
+
+            // REAL-TIME CAMERA TRACKING WITH UNCONSTRAINED DRAG & ZOOM
+            if (trackedPlanet) {
+                const currentPos = new THREE.Vector3();
+                trackedPlanet.getWorldPosition(currentPos);
+
+                if (isTransitioningToPlanet) {
+                    transitionProgress += 0.035;
+                    if (transitionProgress >= 1) {
+                        transitionProgress = 1;
+                        isTransitioningToPlanet = false;
+                    }
+                    const ease = 0.5 - 0.5 * Math.cos(transitionProgress * Math.PI);
+                    controls.target.lerpVectors(transitionStartTarget, currentPos, ease);
+
+                    const offset = (selectedBodyId === 'core')
+                        ? new THREE.Vector3(0, 16, 38)
+                        : (selectedBodyId === 'comet')
+                            ? new THREE.Vector3(10, 8, 18)
+                            : new THREE.Vector3(12, 7, 18);
+                    const destCam = currentPos.clone().add(offset);
+                    camera.position.lerpVectors(transitionStartCam, destCam, ease);
+                } else {
+                    // USER HAS FULL ORBIT AND ZOOM FREEDOM!
+                    // Both camera and controls.target are translated by the planet's exact world delta
+                    const delta = currentPos.clone().sub(lastTrackedWorldPos);
+                    controls.target.add(delta);
+                    camera.position.add(delta);
+                }
+                lastTrackedWorldPos.copy(currentPos);
+
+                // Position beacon target ring on the moving planet
+                if (planetBeaconRing) {
+                    planetBeaconRing.position.copy(currentPos);
+                    planetBeaconRing.rotation.z += 0.02;
+                }
+            } else {
+                if (isResettingOverview) {
+                    controls.target.lerp(new THREE.Vector3(0, 0, 0), 0.06);
+                    camera.position.lerp(new THREE.Vector3(0, 55, 100), 0.06);
+                    if (camera.position.distanceTo(new THREE.Vector3(0, 55, 100)) < 1.0) {
+                        isResettingOverview = false;
+                    }
+                }
+            }
+
+            controls.update();
+            renderer.render(scene, camera);
+        }
+
+        // Modern Planet Dock Interactions: Wheel Scroll, Click Drag, and Smooth Panning
+        function initDockInteractions() {
+            const dock = document.getElementById('planet-dock-track');
+            const btnLeft = document.getElementById('dock-scroll-left');
+            const btnRight = document.getElementById('dock-scroll-right');
+            if (!dock) return;
+
+            // Mouse wheel translates vertical scroll into silky smooth horizontal scroll
+            dock.addEventListener('wheel', (e) => {
+                if (e.deltaY !== 0) {
+                    e.preventDefault();
+                    dock.scrollBy({ left: e.deltaY * 1.5, behavior: 'smooth' });
+                }
+            }, { passive: false });
+
+            // Left & Right navigation buttons
+            if (btnLeft) {
+                btnLeft.addEventListener('click', () => {
+                    dock.scrollBy({ left: -220, behavior: 'smooth' });
+                });
+            }
+            if (btnRight) {
+                btnRight.addEventListener('click', () => {
+                    dock.scrollBy({ left: 220, behavior: 'smooth' });
+                });
+            }
+
+            // Click-and-drag panning for desktop mice
+            let isDown = false;
+            let startX = 0;
+            let scrollStart = 0;
+            let hasDragged = false;
+
+            dock.addEventListener('mousedown', (e) => {
+                isDown = true;
+                hasDragged = false;
+                dock.classList.add('grabbing');
+                startX = e.pageX - dock.offsetLeft;
+                scrollStart = dock.scrollLeft;
+            });
+
+            window.addEventListener('mouseup', () => {
+                if (isDown) {
+                    isDown = false;
+                    dock.classList.remove('grabbing');
+                }
+            });
+
+            dock.addEventListener('mousemove', (e) => {
+                if (!isDown) return;
+                const x = e.pageX - dock.offsetLeft;
+                const walk = (x - startX) * 1.4;
+                if (Math.abs(walk) > 4) hasDragged = true;
+                dock.scrollLeft = scrollStart - walk;
+            });
+
+            // Prevent accidental tab click when dragging
+            dock.querySelectorAll('.planet-tab-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    if (hasDragged) {
+                        e.stopImmediatePropagation();
+                        e.preventDefault();
+                    }
+                }, true);
+            });
+        }
+
+        // Initialize on DOM load
+        window.addEventListener('DOMContentLoaded', init3DSpace);
+    </script>
+
+    <!-- ============================================================
+       INTERACTIVE MINIGAMES & SIMULATOR SCRIPTS
+       ============================================================ -->
+    <script>
+        function triggerCardAction() {
+            if (!selectedBodyId) return;
+            const data = GOALS_DATA[selectedBodyId];
+            if (!data) return;
+
+            openMinigameModal(data.actionType, data.title);
+        }
+
+        function openMinigameModal(type, title) {
+            const modal = document.getElementById('minigame-modal');
+            const titleEl = document.getElementById('modal-title');
+            const viewport = document.getElementById('modal-viewport');
+
+            titleEl.innerHTML = `<i class='bx bx-joystick'></i> ${title} Interactive`;
+            viewport.innerHTML = '';
+            modal.classList.add('active');
+
+            if (type === 'runner_game') {
+                buildRunnerGame(viewport);
+            } else if (type === 'hiking_anim' || type === 'hiking_list') {
+                buildHikingAnimation(viewport);
+            } else if (type === 'coding_game') {
+                buildCodingChallenge(viewport);
+            } else if (type === 'research_sim') {
+                buildTurbineSimulator(viewport);
+            } else if (type === 'piano_game') {
+                buildPianoSynth(viewport);
+            } else if (type === 'organize_game') {
+                buildOrganizeMatrix(viewport);
+            } else if (type === 'comet_physics') {
+                buildCometTelemetry(viewport);
+            } else {
+                buildCoreOverview(viewport);
+            }
+        }
+
+        function closeMinigameModal() {
+            const modal = document.getElementById('minigame-modal');
+            modal.classList.remove('active');
+            if (window.__runnerAnimId) {
+                cancelAnimationFrame(window.__runnerAnimId);
+                window.__runnerAnimId = null;
+            }
+            if (window.__hikeAnimId) {
+                cancelAnimationFrame(window.__hikeAnimId);
+                window.__hikeAnimId = null;
+            }
+            if (window.__cometAnimId) {
+                cancelAnimationFrame(window.__cometAnimId);
+                window.__cometAnimId = null;
+            }
+        }
+
+        /* ------------------------------------------------------------
+           COMET TELEMETRY & CELESTIAL PHYSICS SIMULATOR
+           ------------------------------------------------------------ */
+        function buildCometTelemetry(container) {
+            container.innerHTML = `
+                <div style="display:flex; flex-direction:column; gap:16px;">
+                    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:10px;">
+                        <div style="background:rgba(255,255,255,0.04); border:1px solid rgba(125,211,252,0.25); border-radius:12px; padding:12px; text-align:center;">
+                            <div style="font-size:11px; color:#94a3b8; font-family:'Share Tech Mono',monospace;">ORBITAL VELOCITY</div>
+                            <div style="font-size:20px; font-weight:800; color:#38bdf8; font-family:'Share Tech Mono',monospace;" id="comet-vel-hud">44.8 km/s</div>
+                        </div>
+                        <div style="background:rgba(255,255,255,0.04); border:1px solid rgba(125,211,252,0.25); border-radius:12px; padding:12px; text-align:center;">
+                            <div style="font-size:11px; color:#94a3b8; font-family:'Share Tech Mono',monospace;">PERIHELION DISTANCE</div>
+                            <div style="font-size:20px; font-weight:800; color:#ffd700; font-family:'Share Tech Mono',monospace;">0.84 AU</div>
+                        </div>
+                        <div style="background:rgba(255,255,255,0.04); border:1px solid rgba(125,211,252,0.25); border-radius:12px; padding:12px; text-align:center;">
+                            <div style="font-size:11px; color:#94a3b8; font-family:'Share Tech Mono',monospace;">ION TAIL LENGTH</div>
+                            <div style="font-size:20px; font-weight:800; color:#7dd3fc; font-family:'Share Tech Mono',monospace;">48.2M km</div>
+                        </div>
+                        <div style="background:rgba(255,255,255,0.04); border:1px solid rgba(125,211,252,0.25); border-radius:12px; padding:12px; text-align:center;">
+                            <div style="font-size:11px; color:#94a3b8; font-family:'Share Tech Mono',monospace;">CRYOGENIC SUBLIMATION</div>
+                            <div style="font-size:20px; font-weight:800; color:#34d399; font-family:'Share Tech Mono',monospace;">340 kg/s</div>
+                        </div>
+                    </div>
+
+                    <canvas id="comet-cross-canvas" width="680" height="230" style="width:100%; height:230px; background:#020617; border-radius:14px; border:1px solid rgba(125,211,252,0.3);"></canvas>
+
+                    <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:14px; font-size:13px; line-height:1.6; color:#cbd5e1;">
+                        <strong style="color:#7dd3fc;">Astronomical Dual Tail Anatomy:</strong>
+                        <ul style="margin:6px 0 0 18px; padding:0; display:flex; flex-direction:column; gap:4px;">
+                            <li><span style="color:#38bdf8; font-weight:700;">Type I (Ion Gas Tail):</span> Fluorescent electric-blue stream composed of $CO^+$, $N_2^+$, and $CH^+$ ions driven straight anti-sunward by solar wind magnetic lines.</li>
+                            <li><span style="color:#fde047; font-weight:700;">Type II (Dust Tail):</span> Curved golden-white fan of micro-silicate and carbon grains gently pushed by solar photon pressure while retaining orbital momentum.</li>
+                            <li><span style="color:#e2e8f0; font-weight:700;">Tumbling Nucleus:</span> Irregular porous ice-rock conglomerate with active cryovolcanic jets erupting from solar-heated fissures.</li>
+                        </ul>
+                    </div>
+
+                    <button type="button" class="runner-action-btn" onclick="closeMinigameModal(); selectCelestialBody('comet');" style="background:linear-gradient(135deg, #0284c7 0%, #0369a1 100%); width:100%; justify-content:center; padding:12px; font-size:14px; font-weight:700;">
+                        <i class='bx bx-radar'></i> Track Comet Momo Live in 3D Orbit
+                    </button>
+                </div>
+            `;
+
+            // Draw interactive diagram on canvas
+            const cvs = document.getElementById('comet-cross-canvas');
+            if (!cvs) return;
+            const ctx = cvs.getContext('2d');
+            let t = 0;
+
+            function renderDiagram() {
+                t += 0.03;
+                ctx.fillStyle = '#020617';
+                ctx.fillRect(0, 0, cvs.width, cvs.height);
+
+                // Sun on far left
+                const sunX = 40, sunY = cvs.height / 2;
+                const sunGrad = ctx.createRadialGradient(sunX, sunY, 5, sunX, sunY, 45);
+                sunGrad.addColorStop(0, '#ffffff');
+                sunGrad.addColorStop(0.3, '#fde047');
+                sunGrad.addColorStop(1, 'rgba(234, 179, 8, 0)');
+                ctx.fillStyle = sunGrad;
+                ctx.beginPath();
+                ctx.arc(sunX, sunY, 45, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.fillStyle = '#fde047';
+                ctx.font = '10px "Share Tech Mono", monospace';
+                ctx.fillText('VISION SUN', sunX - 25, sunY + 60);
+
+                // Solar Wind rays
+                ctx.strokeStyle = 'rgba(253, 224, 71, 0.15)';
+                ctx.setLineDash([4, 6]);
+                for (let i = -3; i <= 3; i++) {
+                    ctx.beginPath();
+                    ctx.moveTo(sunX + 30, sunY + i * 15);
+                    ctx.lineTo(cvs.width - 20, sunY + i * 35);
+                    ctx.stroke();
+                }
+                ctx.setLineDash([]);
+
+                // Comet Nucleus Position
+                const nucX = 260;
+                const nucY = cvs.height / 2 + Math.sin(t) * 6;
+
+                // 1. Curved Dust Tail (Golden)
+                ctx.fillStyle = 'rgba(254, 240, 138, 0.4)';
+                ctx.beginPath();
+                ctx.moveTo(nucX, nucY);
+                ctx.quadraticCurveTo(nucX + 180, nucY - 40, cvs.width - 20, nucY - 70);
+                ctx.lineTo(cvs.width - 20, nucY - 15);
+                ctx.quadraticCurveTo(nucX + 160, nucY - 10, nucX, nucY);
+                ctx.fill();
+
+                ctx.fillStyle = '#fef08a';
+                ctx.font = '11px "Share Tech Mono", monospace';
+                ctx.fillText('Type II Dust Tail (Curved by momentum)', cvs.width - 240, nucY - 75);
+
+                // 2. Straight Ion Tail (Cyan)
+                const ionGrad = ctx.createLinearGradient(nucX, nucY, cvs.width - 20, nucY);
+                ionGrad.addColorStop(0, 'rgba(56, 189, 248, 0.9)');
+                ionGrad.addColorStop(1, 'rgba(2, 132, 199, 0)');
+                ctx.fillStyle = ionGrad;
+                ctx.beginPath();
+                ctx.moveTo(nucX, nucY - 6);
+                ctx.lineTo(cvs.width - 20, nucY - 16);
+                ctx.lineTo(cvs.width - 20, nucY + 16);
+                ctx.lineTo(nucX, nucY + 6);
+                ctx.closePath();
+                ctx.fill();
+
+                ctx.fillStyle = '#38bdf8';
+                ctx.fillText('Type I Ion Gas Tail (Anti-Sunward)', cvs.width - 230, nucY + 30);
+
+                // 3. Coma Shroud
+                const comaG = ctx.createRadialGradient(nucX, nucY, 2, nucX, nucY, 32);
+                comaG.addColorStop(0, 'rgba(255,255,255,0.95)');
+                comaG.addColorStop(0.3, 'rgba(125,211,252,0.6)');
+                comaG.addColorStop(1, 'rgba(56,189,248,0)');
+                ctx.fillStyle = comaG;
+                ctx.beginPath();
+                ctx.arc(nucX, nucY, 32, 0, Math.PI * 2);
+                ctx.fill();
+
+                // 4. Irregular Jagged Nucleus
+                ctx.fillStyle = '#334155';
+                ctx.strokeStyle = '#93c5fd';
+                ctx.lineWidth = 1.5;
+                ctx.beginPath();
+                const sides = 8;
+                for (let s = 0; s < sides; s++) {
+                    const ang = (s / sides) * Math.PI * 2 + t * 0.4;
+                    const rad = 10 + Math.sin(ang * 3 + 2) * 3;
+                    const px = nucX + Math.cos(ang) * rad;
+                    const py = nucY + Math.sin(ang) * rad;
+                    if (s === 0) ctx.moveTo(px, py);
+                    else ctx.lineTo(px, py);
+                }
+                ctx.closePath();
+                ctx.fill();
+                ctx.stroke();
+
+                // Cryo-jets erupting towards sun
+                for (let j = 0; j < 3; j++) {
+                    const jetAngle = Math.PI - 0.4 + j * 0.4 + Math.sin(t * 3 + j) * 0.15;
+                    const jx = nucX + Math.cos(jetAngle) * (14 + (t * 20 + j * 12) % 25);
+                    const jy = nucY + Math.sin(jetAngle) * (14 + (t * 20 + j * 12) % 25);
+                    ctx.fillStyle = 'rgba(186, 230, 253, 0.7)';
+                    ctx.beginPath();
+                    ctx.arc(jx, jy, 2, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+
+                ctx.fillStyle = '#e2e8f0';
+                ctx.fillText('Nucleus & Jets', nucX - 35, nucY + 45);
+
+                window.__cometAnimId = requestAnimationFrame(renderDiagram);
+            }
+            renderDiagram();
+        }
+
+        /* ------------------------------------------------------------
+           MINIGAME 1: ASTRO-RUNNER (ENDLESS RUNNER FOR FITNESS GOAL)
+           ------------------------------------------------------------ */
+        function buildRunnerGame(container) {
+            container.innerHTML = `
+                <canvas id="runner-canvas" width="680" height="260"></canvas>
+                <div class="runner-controls-bar">
+                    <div class="runner-hud-stat">
+                        <span id="runner-score">DISTANCE: 0m</span> • <span id="runner-hi">BEST: 0m</span>
+                    </div>
+                    <div style="display:flex; gap:10px;">
+                        <button type="button" class="runner-jump-btn" id="runner-btn" onclick="triggerRunnerJump()">
+                            JUMP (SPACE / CLICK)
+                        </button>
+                    </div>
+                </div>
+                <div style="font-size:12px; color:#94a3b8; margin-top:10px; font-family:'Share Tech Mono', monospace;">
+                    Press SPACE or tap JUMP to leap over hurdles. Train daily for the high-altitude trails!
+                </div>
+            `;
+
+            const rCanvas = document.getElementById('runner-canvas');
+            const rCtx = rCanvas.getContext('2d');
+
+            let score = 0;
+            let bestScore = parseInt(localStorage.getItem('astro_runner_best') || '0', 10);
+            document.getElementById('runner-hi').textContent = `BEST: ${bestScore}m`;
+
+            let isGameOver = false;
+            let player = { x: 60, y: 190, w: 26, h: 42, vy: 0, isGrounded: true };
+            let obstacles = [];
+            let spawnTimer = 0;
+            const gravity = 0.72;
+
+            function jump() {
+                if (player.isGrounded && !isGameOver) {
+                    player.vy = -14.5;
+                    player.isGrounded = false;
+                } else if (isGameOver) {
+                    resetGame();
+                }
+            }
+
+            window.triggerRunnerJump = jump;
+
+            function onKey(e) {
+                if (e.code === 'Space' || e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    jump();
+                }
+            }
+            window.addEventListener('keydown', onKey);
+            rCanvas.addEventListener('click', jump);
+
+            function resetGame() {
+                score = 0;
+                obstacles = [];
+                isGameOver = false;
+                player.y = 190;
+                player.vy = 0;
+                player.isGrounded = true;
+            }
+
+            function runnerLoop() {
+                rCtx.fillStyle = '#020617';
+                rCtx.fillRect(0, 0, rCanvas.width, rCanvas.height);
+
+                // Animated track ground line
+                rCtx.strokeStyle = '#f97316';
+                rCtx.lineWidth = 3;
+                rCtx.beginPath();
+                rCtx.moveTo(0, 232);
+                rCtx.lineTo(rCanvas.width, 232);
+                rCtx.stroke();
+
+                // Ground dashes
+                rCtx.fillStyle = 'rgba(249, 115, 22, 0.3)';
+                for (let i = 0; i < rCanvas.width; i += 40) {
+                    const offset = (score * 8) % 40;
+                    rCtx.fillRect(i - offset, 236, 20, 2);
+                }
+
+                if (!isGameOver) {
+                    score += 0.2;
+                    document.getElementById('runner-score').textContent = `DISTANCE: ${Math.floor(score)}m`;
+
+                    // Player Physics
+                    player.vy += gravity;
+                    player.y += player.vy;
+                    if (player.y >= 190) {
+                        player.y = 190;
+                        player.vy = 0;
+                        player.isGrounded = true;
+                    }
+
+                    // Obstacles Spawner
+                    spawnTimer++;
+                    if (spawnTimer > 75 + Math.random() * 40) {
+                        spawnTimer = 0;
+                        const h = 26 + Math.random() * 20;
+                        obstacles.push({ x: rCanvas.width, y: 232 - h, w: 20, h: h });
+                    }
+
+                    // Update Obstacles
+                    for (let i = obstacles.length - 1; i >= 0; i--) {
+                        const obs = obstacles[i];
+                        obs.x -= 6.5 + (score * 0.005);
+
+                        // Collision detection
+                        if (
+                            player.x < obs.x + obs.w &&
+                            player.x + player.w > obs.x &&
+                            player.y < obs.y + obs.h &&
+                            player.y + player.h > obs.y
+                        ) {
+                            isGameOver = true;
+                            if (score > bestScore) {
+                                bestScore = Math.floor(score);
+                                localStorage.setItem('astro_runner_best', String(bestScore));
+                                document.getElementById('runner-hi').textContent = `BEST: ${bestScore}m`;
+                            }
+                        }
+
+                        if (obs.x < -30) obstacles.splice(i, 1);
+                    }
+                }
+
+                // Draw Player (Neon Runner Silhouette)
+                rCtx.fillStyle = '#38bdf8';
+                rCtx.shadowColor = '#38bdf8';
+                rCtx.shadowBlur = 12;
+                rCtx.fillRect(player.x, player.y, player.w, player.h);
+
+                // Runner visor
+                rCtx.fillStyle = '#ffdf70';
+                rCtx.fillRect(player.x + 14, player.y + 6, 10, 6);
+                rCtx.shadowBlur = 0;
+
+                // Draw Obstacles (Hurdles)
+                obstacles.forEach(obs => {
+                    rCtx.fillStyle = '#ef4444';
+                    rCtx.shadowColor = '#ef4444';
+                    rCtx.shadowBlur = 10;
+                    rCtx.fillRect(obs.x, obs.y, obs.w, obs.h);
+                    rCtx.shadowBlur = 0;
+                });
+
+                if (isGameOver) {
+                    rCtx.fillStyle = 'rgba(2, 6, 23, 0.82)';
+                    rCtx.fillRect(0, 0, rCanvas.width, rCanvas.height);
+
+                    rCtx.fillStyle = '#ffffff';
+                    rCtx.font = 'bold 22px "Plus Jakarta Sans"';
+                    rCtx.textAlign = 'center';
+                    rCtx.fillText('TRAINING SESSION COMPLETE!', rCanvas.width / 2, 110);
+
+                    rCtx.fillStyle = '#f97316';
+                    rCtx.font = '16px "Share Tech Mono"';
+                    rCtx.fillText(`Distance: ${Math.floor(score)}m • Best: ${bestScore}m`, rCanvas.width / 2, 140);
+
+                    rCtx.fillStyle = '#cbd5e1';
+                    rCtx.font = '14px "Plus Jakarta Sans"';
+                    rCtx.fillText('Tap JUMP or Press SPACE to run again!', rCanvas.width / 2, 175);
+                }
+
+                window.__runnerAnimId = requestAnimationFrame(runnerLoop);
+            }
+
+            window.__runnerAnimId = requestAnimationFrame(runnerLoop);
+        }
+
+        /* ------------------------------------------------------------
+           MINIGAME 2: INTERACTIVE MOUNTAIN HIKING ANIMATION SIMULATOR
+           ------------------------------------------------------------ */
+        function buildHikingAnimation(container) {
+            container.innerHTML = `
+                <div style="width:100%; display:flex; flex-direction:column; gap:14px;">
+                    <!-- Elevation & Telemetry HUD Bar -->
+                    <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(16,185,129,0.08); border:1px solid rgba(16,185,129,0.3); border-radius:14px; padding:12px 18px;">
+                        <div>
+                            <span style="font-size:11px; color:#94a3b8; font-family:'Share Tech Mono'; letter-spacing:1px;">EXPEDITION ELEVATION</span>
+                            <div style="font-size:22px; font-weight:800; color:#10b981; font-family:'Share Tech Mono';" id="hike-alt-val">1,000 MASL</div>
+                        </div>
+                        <div style="text-align:center;">
+                            <span style="font-size:11px; color:#94a3b8; font-family:'Share Tech Mono'; letter-spacing:1px;">CURRENT WAYPOINT</span>
+                            <div style="font-size:14px; font-weight:700; color:#ffffff;" id="hike-waypoint-label">Lowland Jump-off Trailhead</div>
+                        </div>
+                        <div style="text-align:right;">
+                            <span style="font-size:11px; color:#94a3b8; font-family:'Share Tech Mono'; letter-spacing:1px;">WEATHER & INVERSION</span>
+                            <div style="font-size:13px; font-weight:700; color:#38bdf8;" id="hike-weather-val">Sea of Clouds • 9°C</div>
+                        </div>
+                    </div>
+
+                    <!-- Interactive 2D Canvas Mountain Trail Viewport -->
+                    <div style="position:relative; width:100%; display:flex; justify-content:center;">
+                        <canvas id="hike-canvas" width="680" height="270" style="background:#020617; border:2px solid #10b981; border-radius:16px; box-shadow:0 0 25px rgba(16,185,129,0.25); max-width:100%; cursor:pointer;"></canvas>
+                    </div>
+
+                    <!-- Trekking Control Buttons -->
+                    <div style="display:flex; flex-wrap:wrap; gap:10px; justify-content:center; align-items:center;">
+                        <button type="button" class="runner-jump-btn" id="hike-toggle-btn" style="background:#10b981; color:#041810;" onclick="toggleAutoHike()">
+                            <i class='bx bx-play-circle'></i> AUTO TREK: ON
+                        </button>
+                        <button type="button" class="runner-jump-btn" style="background:#0f172a; border:1px solid #10b981; color:#34d399;" onclick="manualHikeStep()">
+                            <i class='bx bx-walk'></i> STEP FORWARD (+50m)
+                        </button>
+                        <button type="button" class="runner-jump-btn" style="background:#0f172a; border:1px solid #38bdf8; color:#38bdf8;" onclick="jumpToPeak('pulag')">
+                            <i class='bx bx-cloud'></i> MT. PULAG (SOON ⚡)
+                        </button>
+                        <button type="button" class="runner-jump-btn" style="background:#0f172a; border:1px solid #ffd700; color:#ffd700;" onclick="jumpToPeak('apo')">
+                            <i class='bx bx-trophy'></i> MT. APO (FINISHED 🏆)
+                        </button>
+                        <button type="button" class="runner-jump-btn" style="background:#0f172a; border:1px solid rgba(255,255,255,0.2); color:#94a3b8;" onclick="jumpToPeak('trailhead')">
+                            <i class='bx bx-reset'></i> RESTART
+                        </button>
+                    </div>
+
+                    <!-- Featured Mountain Status Cards -->
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:6px;">
+                        <!-- Mount Apo (Finished) -->
+                        <div class="hike-peak-card completed" style="flex-direction:column; align-items:flex-start; gap:8px;">
+                            <div style="display:flex; justify-content:space-between; width:100%; align-items:center;">
+                                <span class="peak-rank" style="background:#10b981; color:#041810;">#1</span>
+                                <span class="peak-badge done"><i class='bx bx-check-double'></i> Finished 🏆</span>
+                            </div>
+                            <div>
+                                <h4 style="color:#ffffff; font-size:15px; font-weight:700;">Mount Apo (2,954m / 9,692ft)</h4>
+                                <p style="font-size:12px; color:#94a3b8;">Davao del Sur & Cotabato • Highest in the Philippines</p>
+                                <div style="font-size:11.5px; color:#34d399; margin-top:4px;">
+                                    🏆 SUMMIT CONQUERED! Successfully traversed Kidapawan and volcanic Boulder Face. Highest altitude achieved.
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Mount Pulag (Soon ⚡) -->
+                        <div class="hike-peak-card" style="flex-direction:column; align-items:flex-start; gap:8px; border-color:rgba(56,189,248,0.4); background:rgba(56,189,248,0.05);">
+                            <div style="display:flex; justify-content:space-between; width:100%; align-items:center;">
+                                <span class="peak-rank" style="background:#38bdf8; color:#020617;">#3</span>
+                                <span class="peak-badge soon"><i class='bx bx-zap'></i> Soon ⚡</span>
+                            </div>
+                            <div>
+                                <h4 style="color:#ffffff; font-size:15px; font-weight:700;">Mount Pulag (2,928m / 9,606ft)</h4>
+                                <p style="font-size:12px; color:#94a3b8;">Benguet & Nueva Vizcaya • Sea of Clouds & Dwarf Bamboo</p>
+                                <div style="font-size:11.5px; color:#38bdf8; margin-top:4px;">
+                                    ⚡ UPCOMING EXPEDITION: Thermal layering & gear ready to witness the sunrise over the legendary Sea of Clouds.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Other Top 5 Peaks Planned Chips -->
+                    <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap; padding:10px 14px; background:rgba(255,255,255,0.03); border-radius:12px; border:1px solid rgba(255,255,255,0.07); font-size:11.5px; color:#94a3b8;">
+                        <span style="color:#facc15; font-family:'Share Tech Mono';">FUTURE EXPEDITIONS:</span>
+                        <span style="background:rgba(255,255,255,0.05); padding:3px 8px; border-radius:6px; color:#cbd5e1;">#2 Mt. Dulang-dulang (2,938m) • Planned</span>
+                        <span style="background:rgba(255,255,255,0.05); padding:3px 8px; border-radius:6px; color:#cbd5e1;">#4 Mt. Kitanglad (2,899m) • Planned</span>
+                        <span style="background:rgba(255,255,255,0.05); padding:3px 8px; border-radius:6px; color:#cbd5e1;">#5 Mt. Kalatungan (2,880m) • Planned</span>
+                    </div>
+                </div>
+            `;
+
+            const hCanvas = document.getElementById('hike-canvas');
+            if (!hCanvas) return;
+            const ctx = hCanvas.getContext('2d');
+
+            // Trek State
+            let hikerProgress = 0.08; // 0.0 to 1.0 along the mountain ridge
+            let isAutoHiking = true;
+            let walkCycle = 0;
+            let cloudPhase = 0;
+
+            // Trail Elevation Curve Function: returns [x, y, elevationMASL]
+            function getTrailPoint(t) {
+                const x = 50 + t * (hCanvas.width - 100);
+                // Non-linear elevation profile rising towards Mt. Apo summit
+                // Base at y=230 (1000m), Pulag at t=0.62 y=125 (2928m), Apo at t=0.92 y=80 (2954m)
+                let y;
+                if (t < 0.6) {
+                    const localT = t / 0.6;
+                    y = 230 - Math.pow(localT, 1.3) * 105;
+                } else if (t < 0.72) {
+                    // Saddle dip between Pulag & Apo ranges
+                    const localT = (t - 0.6) / 0.12;
+                    y = 125 + Math.sin(localT * Math.PI) * 14;
+                } else {
+                    const localT = (t - 0.72) / 0.28;
+                    y = 139 - Math.pow(localT, 0.9) * 62;
+                }
+                const masl = Math.round(1000 + Math.pow(t, 0.75) * 1954);
+                return { x, y, masl };
+            }
+
+            // Cloud puffs for Sea of Clouds Inversion layer
+            const clouds = [];
+            for (let i = 0; i < 18; i++) {
+                clouds.push({
+                    x: Math.random() * hCanvas.width,
+                    y: 130 + Math.random() * 50,
+                    rx: 35 + Math.random() * 45,
+                    ry: 14 + Math.random() * 12,
+                    speed: 0.25 + Math.random() * 0.35,
+                    opacity: 0.18 + Math.random() * 0.22
+                });
+            }
+
+            window.toggleAutoHike = function() {
+                isAutoHiking = !isAutoHiking;
+                const btn = document.getElementById('hike-toggle-btn');
+                if (btn) {
+                    btn.innerHTML = isAutoHiking
+                        ? `<i class='bx bx-play-circle'></i> AUTO TREK: ON`
+                        : `<i class='bx bx-pause-circle'></i> AUTO TREK: PAUSED`;
+                    btn.style.background = isAutoHiking ? '#10b981' : '#f59e0b';
+                }
+            };
+
+            window.manualHikeStep = function() {
+                hikerProgress = Math.min(1.0, hikerProgress + 0.035);
+                walkCycle += 1.2;
+                updateHUD();
+            };
+
+            window.jumpToPeak = function(peak) {
+                if (peak === 'pulag') {
+                    hikerProgress = 0.60;
+                } else if (peak === 'apo') {
+                    hikerProgress = 0.92;
+                } else {
+                    hikerProgress = 0.05;
+                }
+                walkCycle += 0.5;
+                updateHUD();
+            };
+
+            hCanvas.addEventListener('click', () => {
+                window.manualHikeStep();
+            });
+
+            function updateHUD() {
+                const pt = getTrailPoint(hikerProgress);
+                const altEl = document.getElementById('hike-alt-val');
+                const wpEl = document.getElementById('hike-waypoint-label');
+                const wthEl = document.getElementById('hike-weather-val');
+
+                if (altEl) altEl.textContent = `${pt.masl.toLocaleString()} MASL`;
+
+                if (wpEl) {
+                    if (hikerProgress >= 0.88) {
+                        wpEl.innerHTML = `<span style="color:#ffd700;">🏆 Mt. Apo Summit (2,954m) • CONQUERED!</span>`;
+                    } else if (hikerProgress >= 0.55 && hikerProgress <= 0.66) {
+                        wpEl.innerHTML = `<span style="color:#38bdf8;">⚡ Mt. Pulag Ridge (2,928m) • SOON!</span>`;
+                    } else if (hikerProgress >= 0.35) {
+                        wpEl.textContent = `High-Altitude Mossy Cloud Forest (2,100m)`;
+                    } else {
+                        wpEl.textContent = `Jump-off Trailhead (1,000m)`;
+                    }
+                }
+
+                if (wthEl) {
+                    if (hikerProgress >= 0.5) {
+                        wthEl.textContent = `Sea of Clouds Inversion • 8°C Sunrise`;
+                    } else {
+                        wthEl.textContent = `Trail Rainforest Canopy • 19°C`;
+                    }
+                }
+            }
+
+            function hikeLoop() {
+                if (!document.getElementById('hike-canvas')) return;
+
+                // 1. Sky & Sunrise Gradient
+                const skyGrad = ctx.createLinearGradient(0, 0, 0, hCanvas.height);
+                skyGrad.addColorStop(0, '#030712');
+                skyGrad.addColorStop(0.35, '#0f172a');
+                skyGrad.addColorStop(0.68, '#1e1b4b');
+                skyGrad.addColorStop(0.88, '#f59e0b');
+                skyGrad.addColorStop(1, '#ea580c');
+                ctx.fillStyle = skyGrad;
+                ctx.fillRect(0, 0, hCanvas.width, hCanvas.height);
+
+                // High Altitude Stars
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+                for (let i = 0; i < 28; i++) {
+                    const sx = (i * 24 + 11) % hCanvas.width;
+                    const sy = (i * 19 + 7) % 80;
+                    ctx.fillRect(sx, sy, 1.5, 1.5);
+                }
+
+                // Alpine Sunrise Sun Disk cresting behind mountain range
+                const sunGlow = ctx.createRadialGradient(570, 75, 4, 570, 75, 75);
+                sunGlow.addColorStop(0, 'rgba(255, 235, 150, 0.95)');
+                sunGlow.addColorStop(0.3, 'rgba(245, 158, 11, 0.45)');
+                sunGlow.addColorStop(1, 'rgba(245, 158, 11, 0)');
+                ctx.fillStyle = sunGlow;
+                ctx.beginPath();
+                ctx.arc(570, 75, 75, 0, Math.PI * 2);
+                ctx.fill();
+
+                // 2. Far Mountain Range Silhouette (Deep Indigo)
+                ctx.fillStyle = '#0a0f29';
+                ctx.beginPath();
+                ctx.moveTo(0, hCanvas.height);
+                ctx.lineTo(0, 160);
+                ctx.lineTo(120, 130);
+                ctx.lineTo(240, 150);
+                ctx.lineTo(390, 105); // Far Pulag peak
+                ctx.lineTo(470, 140);
+                ctx.lineTo(580, 65);  // Far Apo peak
+                ctx.lineTo(hCanvas.width, 110);
+                ctx.lineTo(hCanvas.width, hCanvas.height);
+                ctx.closePath();
+                ctx.fill();
+
+                // 3. Midground Mountain Range (With Rim Light)
+                ctx.fillStyle = '#111c44';
+                ctx.beginPath();
+                ctx.moveTo(0, hCanvas.height);
+                ctx.lineTo(0, 200);
+                ctx.lineTo(150, 165);
+                ctx.lineTo(290, 180);
+                ctx.lineTo(420, 120);
+                ctx.lineTo(540, 135);
+                ctx.lineTo(620, 85);
+                ctx.lineTo(hCanvas.width, 140);
+                ctx.lineTo(hCanvas.width, hCanvas.height);
+                ctx.closePath();
+                ctx.fill();
+
+                // 4. THE ICONIC SEA OF CLOUDS (Drifting horizontal inversion fog)
+                cloudPhase += 0.02;
+                clouds.forEach(c => {
+                    c.x += c.speed;
+                    if (c.x - c.rx > hCanvas.width) c.x = -c.rx;
+
+                    const cloudGrad = ctx.createRadialGradient(c.x, c.y, 4, c.x, c.y, c.rx);
+                    cloudGrad.addColorStop(0, `rgba(255, 255, 255, ${c.opacity})`);
+                    cloudGrad.addColorStop(0.6, `rgba(254, 240, 138, ${c.opacity * 0.7})`);
+                    cloudGrad.addColorStop(1, 'rgba(255, 255, 255, 0)');
+
+                    ctx.fillStyle = cloudGrad;
+                    ctx.beginPath();
+                    ctx.ellipse(c.x, c.y, c.rx, c.ry, 0, 0, Math.PI * 2);
+                    ctx.fill();
+                });
+
+                // "Sea of Clouds" Inversion Ambient Label
+                ctx.fillStyle = 'rgba(254, 243, 199, 0.65)';
+                ctx.font = '600 11px "Share Tech Mono"';
+                ctx.fillText('☁️ SEA OF CLOUDS INVERSION LAYER (2,200m - 2,700m)', 230, 188);
+
+                // 5. Main Foreground Trek Ridge Slope
+                ctx.fillStyle = '#06131c';
+                ctx.beginPath();
+                ctx.moveTo(0, hCanvas.height);
+                ctx.lineTo(0, 240);
+                for (let t = 0; t <= 1.0; t += 0.02) {
+                    const pt = getTrailPoint(t);
+                    ctx.lineTo(pt.x, pt.y + 12);
+                }
+                ctx.lineTo(hCanvas.width, hCanvas.height);
+                ctx.closePath();
+                ctx.fill();
+
+                // Trail Line Path Glowing Highlight
+                ctx.strokeStyle = '#10b981';
+                ctx.lineWidth = 3;
+                ctx.shadowColor = '#10b981';
+                ctx.shadowBlur = 8;
+                ctx.beginPath();
+                for (let t = 0; t <= 1.0; t += 0.02) {
+                    const pt = getTrailPoint(t);
+                    if (t === 0) ctx.moveTo(pt.x, pt.y);
+                    else ctx.lineTo(pt.x, pt.y);
+                }
+                ctx.stroke();
+                ctx.shadowBlur = 0;
+
+                // 6. Draw Summit Flags and Waypoint Markers
+                // Waypoint 1: Trailhead
+                const th = getTrailPoint(0.05);
+                ctx.fillStyle = '#94a3b8';
+                ctx.font = '10px "Share Tech Mono"';
+                ctx.fillText('📍 TRAILHEAD (1,000m)', th.x - 20, th.y + 28);
+
+                // Waypoint 2: MT PULAG (2,928m) - SOON ⚡
+                const pulagPt = getTrailPoint(0.60);
+                // Flagpole
+                ctx.strokeStyle = '#38bdf8';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(pulagPt.x, pulagPt.y);
+                ctx.lineTo(pulagPt.x, pulagPt.y - 42);
+                ctx.stroke();
+                // Flag banner
+                ctx.fillStyle = '#38bdf8';
+                ctx.shadowColor = '#38bdf8';
+                ctx.shadowBlur = 10;
+                ctx.beginPath();
+                ctx.moveTo(pulagPt.x, pulagPt.y - 42);
+                ctx.lineTo(pulagPt.x + 24, pulagPt.y - 34);
+                ctx.lineTo(pulagPt.x, pulagPt.y - 26);
+                ctx.closePath();
+                ctx.fill();
+                ctx.shadowBlur = 0;
+                // Label
+                ctx.fillStyle = '#38bdf8';
+                ctx.font = 'bold 11.5px "Plus Jakarta Sans"';
+                ctx.fillText('⚡ MT. PULAG (2,928m)', pulagPt.x - 55, pulagPt.y - 50);
+                ctx.fillStyle = '#fef08a';
+                ctx.font = '700 10.5px "Share Tech Mono"';
+                ctx.fillText('[SOON ⚡ Sea of Clouds]', pulagPt.x - 50, pulagPt.y - 38);
+
+                // Waypoint 3: MT APO (2,954m) - CONQUERED / FINISHED 🏆
+                const apoPt = getTrailPoint(0.92);
+                // Flagpole
+                ctx.strokeStyle = '#ffd700';
+                ctx.lineWidth = 2.5;
+                ctx.beginPath();
+                ctx.moveTo(apoPt.x, apoPt.y);
+                ctx.lineTo(apoPt.x, apoPt.y - 48);
+                ctx.stroke();
+                // Flag banner
+                ctx.fillStyle = '#ffd700';
+                ctx.shadowColor = '#ffd700';
+                ctx.shadowBlur = 12;
+                ctx.beginPath();
+                ctx.moveTo(apoPt.x, apoPt.y - 48);
+                ctx.lineTo(apoPt.x + 28, apoPt.y - 38);
+                ctx.lineTo(apoPt.x, apoPt.y - 28);
+                ctx.closePath();
+                ctx.fill();
+                ctx.shadowBlur = 0;
+                // Label
+                ctx.fillStyle = '#ffd700';
+                ctx.font = 'bold 12px "Plus Jakarta Sans"';
+                ctx.fillText('🏆 MT. APO (2,954m)', apoPt.x - 65, apoPt.y - 56);
+                ctx.fillStyle = '#34d399';
+                ctx.font = '700 10.5px "Share Tech Mono"';
+                ctx.fillText('[FINISHED 🏆 Highest in PH]', apoPt.x - 70, apoPt.y - 42);
+
+                // 7. Auto-hike progression
+                if (isAutoHiking) {
+                    hikerProgress += 0.0016;
+                    if (hikerProgress > 1.0) hikerProgress = 0.02;
+                    walkCycle += 0.14;
+                    updateHUD();
+                }
+
+                // 8. Render Animated Trekker (Ruel Momo Jr.)
+                const hiker = getTrailPoint(hikerProgress);
+                const hX = hiker.x;
+                const hY = hiker.y;
+
+                // Trekker Headlamp Light Cone Beam
+                const beamGrad = ctx.createRadialGradient(hX + 12, hY - 26, 2, hX + 50, hY - 18, 55);
+                beamGrad.addColorStop(0, 'rgba(255, 240, 180, 0.45)');
+                beamGrad.addColorStop(1, 'rgba(255, 240, 180, 0)');
+                ctx.fillStyle = beamGrad;
+                ctx.beginPath();
+                ctx.moveTo(hX + 10, hY - 26);
+                ctx.lineTo(hX + 65, hY - 38);
+                ctx.lineTo(hX + 65, hY + 4);
+                ctx.closePath();
+                ctx.fill();
+
+                // Stride legs with walking cycle
+                const legStride = Math.sin(walkCycle) * 7;
+                ctx.strokeStyle = '#334155';
+                ctx.lineWidth = 3.5;
+                ctx.lineCap = 'round';
+                // Left leg
+                ctx.beginPath();
+                ctx.moveTo(hX, hY - 14);
+                ctx.lineTo(hX - 5 + legStride, hY);
+                ctx.stroke();
+                // Right leg
+                ctx.beginPath();
+                ctx.moveTo(hX, hY - 14);
+                ctx.lineTo(hX + 5 - legStride, hY);
+                ctx.stroke();
+
+                // Torso & mountaineering jacket
+                ctx.fillStyle = '#10b981';
+                ctx.fillRect(hX - 5, hY - 26, 10, 13);
+
+                // Expedition Backpack (Orange/slate with bedroll)
+                ctx.fillStyle = '#f97316';
+                ctx.fillRect(hX - 12, hY - 28, 7, 14);
+                // Sleeping mat roll
+                ctx.fillStyle = '#38bdf8';
+                ctx.fillRect(hX - 13, hY - 32, 9, 4);
+
+                // Head & Cap
+                ctx.fillStyle = '#fde047';
+                ctx.beginPath();
+                ctx.arc(hX + 1, hY - 30, 5, 0, Math.PI * 2);
+                ctx.fill();
+                // Headlamp
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(hX + 5, hY - 32, 3, 3);
+
+                // Dual Trekking Poles swinging with stride
+                const poleSwing = Math.cos(walkCycle) * 8;
+                ctx.strokeStyle = '#cbd5e1';
+                ctx.lineWidth = 1.5;
+                // Forward pole
+                ctx.beginPath();
+                ctx.moveTo(hX + 6, hY - 18);
+                ctx.lineTo(hX + 14 + poleSwing, hY);
+                ctx.stroke();
+                // Rear pole
+                ctx.beginPath();
+                ctx.moveTo(hX - 2, hY - 18);
+                ctx.lineTo(hX - 8 - poleSwing, hY);
+                ctx.stroke();
+
+                // Label tag floating above hiker
+                ctx.fillStyle = '#ffffff';
+                ctx.font = '600 10px "Plus Jakarta Sans"';
+                ctx.textAlign = 'center';
+                ctx.fillText('Ruel (Trekking)', hX, hY - 38);
+                ctx.textAlign = 'left';
+
+                window.__hikeAnimId = requestAnimationFrame(hikeLoop);
+            }
+
+            // Start animation loop
+            if (window.__hikeAnimId) cancelAnimationFrame(window.__hikeAnimId);
+            window.__hikeAnimId = requestAnimationFrame(hikeLoop);
+        }
+
+        // Backward compatibility
+        const buildHikingBucketList = buildHikingAnimation;
+
+        /* ------------------------------------------------------------
+           MINIGAME 3: CODE TERMINAL CHALLENGE (BETTER CODING)
+           ------------------------------------------------------------ */
+        function buildCodingChallenge(container) {
+            container.innerHTML = `
+                <div style="width:100%; display:flex; flex-direction:column; gap:16px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <span style="color:#38bdf8; font-family:'Share Tech Mono'; font-size:12.5px;">SYNTAX DEBUGGER TERMINAL</span>
+                        <span id="code-score" style="color:#ffd700; font-weight:700; font-family:'Share Tech Mono';">SCORE: 0 PTS</span>
+                    </div>
+
+                    <div class="code-challenge-box" id="code-snippet">
+                        // Challenge 1: CSS Centering & Grid
+                        <br><br>
+                        .cards-container {
+                        <br>&nbsp;&nbsp;display: grid;
+                        <br>&nbsp;&nbsp;grid-template-columns: repeat(<span style="color:#f43f5e; background:#3b0712; padding:2px 6px; border-radius:4px;">???</span>, minmax(300px, 1fr));
+                        <br>&nbsp;&nbsp;gap: 28px;
+                        <br>}
+                    </div>
+
+                    <div style="color:#ffffff; font-size:14px; font-weight:600;">
+                        Which keyword fills the blank to make cards adapt fluidly across screen widths?
+                    </div>
+
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;" id="code-options">
+                        <button type="button" class="runner-jump-btn" style="background:#0f172a; border:1px solid #38bdf8; color:#38bdf8;" onclick="answerCode(true)">
+                            A) auto-fit
+                        </button>
+                        <button type="button" class="runner-jump-btn" style="background:#0f172a; border:1px solid rgba(255,255,255,0.2); color:#cbd5e1;" onclick="answerCode(false)">
+                            B) flex-fill
+                        </button>
+                        <button type="button" class="runner-jump-btn" style="background:#0f172a; border:1px solid rgba(255,255,255,0.2); color:#cbd5e1;" onclick="answerCode(false)">
+                            C) static-wrap
+                        </button>
+                        <button type="button" class="runner-jump-btn" style="background:#0f172a; border:1px solid rgba(255,255,255,0.2); color:#cbd5e1;" onclick="answerCode(false)">
+                            D) repeat-all
+                        </button>
+                    </div>
+
+                    <div id="code-feedback" style="display:none; padding:12px; border-radius:10px; font-size:13px; font-weight:600;"></div>
+                </div>
+            `;
+        }
+
+        window.answerCode = function(isCorrect) {
+            const fb = document.getElementById('code-feedback');
+            fb.style.display = 'block';
+            if (isCorrect) {
+                fb.style.background = 'rgba(16, 185, 129, 0.2)';
+                fb.style.border = '1px solid #10b981';
+                fb.style.color = '#34d399';
+                fb.innerHTML = '🎉 CORRECT! `repeat(auto-fit, minmax(300px, 1fr))` creates a robust responsive card layout without media queries.';
+                document.getElementById('code-score').textContent = 'SCORE: 100 PTS • LEVEL UP!';
+            } else {
+                fb.style.background = 'rgba(239, 68, 68, 0.2)';
+                fb.style.border = '1px solid #ef4444';
+                fb.style.color = '#f87171';
+                fb.innerHTML = '❌ Incorrect. Review CSS Grid repeat functions and try again!';
+            }
+        };
+
+        /* ------------------------------------------------------------
+           MINIGAME 4: TIDAL CURRENT TURBINE SIMULATOR (SIP RESEARCH)
+           ------------------------------------------------------------ */
+        function buildTurbineSimulator(container) {
+            container.innerHTML = `
+                <div style="width:100%; display:flex; flex-direction:column; gap:16px;">
+                    <div style="color:#06b6d4; font-family:'Share Tech Mono'; font-size:12.5px;">
+                        HYDRODYNAMIC TURBINE LAB • SIP INVESTIGATORY SIMULATOR
+                    </div>
+
+                    <div style="display:flex; justify-content:space-around; background:rgba(6,182,212,0.08); border:1px solid rgba(6,182,212,0.3); border-radius:16px; padding:18px; text-align:center;">
+                        <div>
+                            <span style="font-size:11px; color:#94a3b8; font-family:'Share Tech Mono';">WATER VELOCITY</span>
+                            <div style="font-size:24px; font-weight:800; color:#38bdf8;" id="sim-flow-val">1.8 m/s</div>
+                        </div>
+                        <div>
+                            <span style="font-size:11px; color:#94a3b8; font-family:'Share Tech Mono';">ROTOR RPM</span>
+                            <div style="font-size:24px; font-weight:800; color:#10b981;" id="sim-rpm-val">142 RPM</div>
+                        </div>
+                        <div>
+                            <span style="font-size:11px; color:#94a3b8; font-family:'Share Tech Mono';">POWER HARVESTED</span>
+                            <div style="font-size:24px; font-weight:800; color:#ffd700;" id="sim-power-val">340 Watts</div>
+                        </div>
+                    </div>
+
+                    <!-- Flow Slider Control -->
+                    <div style="display:flex; flex-direction:column; gap:6px;">
+                        <label style="font-size:13px; color:#cbd5e1; display:flex; justify-content:space-between;">
+                            <span>Adjust Coastal Tidal Current Speed:</span>
+                            <span id="slider-label" style="color:#06b6d4; font-weight:700;">1.8 m/s</span>
+                        </label>
+                        <input type="range" min="0.5" max="3.5" step="0.1" value="1.8" style="width:100%; accent-color:#06b6d4; cursor:pointer;" oninput="updateTurbineSim(this.value)">
+                    </div>
+
+                    <div style="font-size:12.5px; color:#94a3b8; line-height:1.6; background:rgba(0,0,0,0.3); padding:12px; border-radius:12px; border:1px solid rgba(255,255,255,0.08);">
+                        💡 <strong>Research Insight:</strong> The modified blade profile utilizes curved hydrofoils that trigger rotational torque even at weak ocean current velocities (0.8 - 1.5 m/s), making marine energy viable in shallow Philippine straits.
+                    </div>
+                </div>
+            `;
+        }
+
+        window.updateTurbineSim = function(flowSpeed) {
+            const flow = parseFloat(flowSpeed);
+            document.getElementById('sim-flow-val').textContent = flow.toFixed(1) + ' m/s';
+            document.getElementById('slider-label').textContent = flow.toFixed(1) + ' m/s';
+
+            // Cubic power law for fluid kinetic energy P = 0.5 * rho * A * v^3 * Cp
+            const rpm = Math.floor(flow * 78 + Math.random() * 4);
+            const watts = Math.floor(Math.pow(flow, 3) * 58);
+
+            document.getElementById('sim-rpm-val').textContent = rpm + ' RPM';
+            document.getElementById('sim-power-val').textContent = watts + ' Watts';
+        };
+
+        /* ------------------------------------------------------------
+           MINIGAME 5: PIANO SYNTHESIZER (PIANO & HOBBIES)
+           ------------------------------------------------------------ */
+        function buildPianoSynth(container) {
+            container.innerHTML = `
+                <div style="width:100%; display:flex; flex-direction:column; align-items:center; gap:16px;">
+                    <div style="color:#a855f7; font-family:'Share Tech Mono'; font-size:12.5px;">
+                        WEB AUDIO PIANO SYNTHESIZER • HARMONIC FLOW
+                    </div>
+
+                    <div class="piano-keys">
+                        <button type="button" class="piano-white-key" onclick="playNote(261.63)">C4</button>
+                        <button type="button" class="piano-black-key" onclick="playNote(277.18)">C#</button>
+                        <button type="button" class="piano-white-key" onclick="playNote(293.66)">D4</button>
+                        <button type="button" class="piano-black-key" onclick="playNote(311.13)">D#</button>
+                        <button type="button" class="piano-white-key" onclick="playNote(329.63)">E4</button>
+                        <button type="button" class="piano-white-key" onclick="playNote(349.23)">F4</button>
+                        <button type="button" class="piano-black-key" onclick="playNote(369.99)">F#</button>
+                        <button type="button" class="piano-white-key" onclick="playNote(392.00)">G4</button>
+                        <button type="button" class="piano-black-key" onclick="playNote(415.30)">G#</button>
+                        <button type="button" class="piano-white-key" onclick="playNote(440.00)">A4</button>
+                        <button type="button" class="piano-black-key" onclick="playNote(466.16)">A#</button>
+                        <button type="button" class="piano-white-key" onclick="playNote(493.88)">B4</button>
+                        <button type="button" class="piano-white-key" onclick="playNote(523.25)">C5</button>
+                    </div>
+
+                    <div style="font-size:12.5px; color:#cbd5e1; font-family:'Share Tech Mono', monospace;">
+                        Click keys above to play real synthetic piano tones!
+                    </div>
+                </div>
+            `;
+        }
+
+        let synthAudioCtx = null;
+        window.playNote = function(freq) {
+            try {
+                if (!synthAudioCtx) {
+                    synthAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                }
+                if (synthAudioCtx.state === 'suspended') {
+                    synthAudioCtx.resume();
+                }
+
+                const now = synthAudioCtx.currentTime;
+                const osc = synthAudioCtx.createOscillator();
+                const gain = synthAudioCtx.createGain();
+
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(freq, now);
+
+                // Attack, Decay, Sustain, Release
+                gain.gain.setValueAtTime(0.001, now);
+                gain.gain.exponentialRampToValueAtTime(0.35, now + 0.03);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.85);
+
+                osc.connect(gain);
+                gain.connect(synthAudioCtx.destination);
+
+                osc.start(now);
+                osc.stop(now + 0.9);
+            } catch(e) {}
+        };
+
+        /* ------------------------------------------------------------
+           MINIGAME 6: TASK PRIORITY MATRIX (MORE ORGANIZED)
+           ------------------------------------------------------------ */
+        function buildOrganizeMatrix(container) {
+            container.innerHTML = `
+                <div style="width:100%; display:flex; flex-direction:column; gap:14px;">
+                    <div style="color:#eab308; font-family:'Share Tech Mono'; font-size:12.5px;">
+                        EISENHOWER PRIORITY MATRIX • DAILY STUDENT MASTERY
+                    </div>
+
+                    <div class="task-grid-container">
+                        <!-- Quadrant 1: Urgent & Important -->
+                        <div class="task-quadrant" style="border-color:rgba(239,68,68,0.4);">
+                            <div class="quadrant-title" style="color:#ef4444;">
+                                <i class='bx bx-alarm-exclamation'></i> Urgent & Important (Do First)
+                            </div>
+                            <div class="task-item" onclick="this.classList.toggle('checked')">
+                                <i class='bx bx-check'></i> STE Science Investigatory Project draft
+                            </div>
+                            <div class="task-item" onclick="this.classList.toggle('checked')">
+                                <i class='bx bx-check'></i> Math 8 Quadratic Equations exam review
+                            </div>
+                        </div>
+
+                        <!-- Quadrant 2: Important, Not Urgent -->
+                        <div class="task-quadrant" style="border-color:rgba(56,189,248,0.4);">
+                            <div class="quadrant-title" style="color:#38bdf8;">
+                                <i class='bx bx-calendar-star'></i> Important (Schedule & Plan)
+                            </div>
+                            <div class="task-item" onclick="this.classList.toggle('checked')">
+                                <i class='bx bx-check'></i> 5km trail running conditioning
+                            </div>
+                            <div class="task-item" onclick="this.classList.toggle('checked')">
+                                <i class='bx bx-check'></i> 30m TypeScript & Three.js shader code
+                            </div>
+                            <div class="task-item" onclick="this.classList.toggle('checked')">
+                                <i class='bx bx-check'></i> Piano Hanon finger exercise practice
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="font-size:12px; color:#94a3b8; text-align:center;">
+                        Click any task above to mark as completed in today's orbit cycle!
+                    </div>
+                </div>
+            `;
+        }
+
+        function buildCoreOverview(container) {
+            container.innerHTML = `
+                <div style="width:100%; display:flex; flex-direction:column; gap:16px;">
+                    <div style="color:#ffd700; font-family:'Share Tech Mono'; font-size:12.5px;">
+                        SOLAR SYSTEM STATUS • CORE METRICS
+                    </div>
+                    <p style="font-size:14px; line-height:1.7; color:#cbd5e1;">
+                        Every planetary goal orbits the central vision of Ruel C. Momo Jr.: creating technology that matters, conquering summits in nature, pushing the boundaries of scientific research, and maintaining disciplined, balanced student life.
+                    </p>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:8px;">
+                        <div style="background:rgba(255,255,255,0.03); padding:14px; border-radius:12px; border:1px solid rgba(255,255,255,0.08);">
+                            <span style="font-size:12px; color:#94a3b8; font-family:'Share Tech Mono';">ACTIVE ORBITS</span>
+                            <div style="font-size:20px; font-weight:800; color:#ffd700;">6 Goals</div>
+                        </div>
+                        <div style="background:rgba(255,255,255,0.03); padding:14px; border-radius:12px; border:1px solid rgba(255,255,255,0.08);">
+                            <span style="font-size:12px; color:#94a3b8; font-family:'Share Tech Mono';">TOP PEAK CONQUERED</span>
+                            <div style="font-size:20px; font-weight:800; color:#10b981;">Mt. Apo (2,954m)</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+    </script>
+
+    <!-- POLISH LAYER: progress count-up · escape handling -->
+    <script>
+        (function () {
+            'use strict';
+
+            const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+            let progressRun = 0;
+
+            window.animateProgressPercent = function (element, target, duration) {
+                if (!element) return;
+                if (reduceMotion.matches) {
+                    element.textContent = target + '%';
+                    return;
+                }
+
+                // Later calls win, so switching bodies mid-count never leaves
+                // two loops fighting over the same readout.
+                const run = ++progressRun;
+                let start = null;
+
+                function step(now) {
+                    if (run !== progressRun) return;
+                    if (start === null) start = now;
+                    const t = Math.max(0, Math.min(1, (now - start) / duration));
+                    const eased = 1 - Math.pow(1 - t, 3);
+                    element.textContent = Math.round(target * eased) + '%';
+                    if (t < 1) requestAnimationFrame(step);
+                }
+                requestAnimationFrame(step);
+            };
+
+            // Escape closes the frontmost layer without hijacking other keys.
+            window.addEventListener('keydown', function (event) {
+                if (event.key !== 'Escape') return;
+
+                const modal = document.querySelector('.minigame-modal-overlay.active');
+                if (modal) {
+                    closeMinigameModal();
+                    return;
+                }
+
+                const card = document.getElementById('side-goal-card');
+                if (card && card.classList.contains('open')) {
+                    closeGoalCard();
+                }
+            }, true);
+        })();
+    </script>
+</body>
+</html>
